@@ -1,0 +1,27 @@
+Network model,IE-Type,Platform name,Throughput-INT8,Throughput-FP32,Throughput-FP16,Value,Efficiency,Latency
+bert-base-cased124,atom,Intel® Atom™ x5-E3940,0.90,0.44,0.44,0.026,0.095,1183.77
+bert-base-cased124,atom,Intel® Atom™ x6425E CPU-only,1.59,0.64,0.64,0.026,0.132,631.26
+bert-base-cased124,atom,Intel® Atom™ x6425E iGPU-only,4.62,3.00,4.74,0.078,0.385,222.43
+bert-base-cased124,atom,Intel® Atom™ x6425E CPU+iGPU,5.76,2.99,4.61,0.097,0.479,
+bert-base-cased124,atom,Intel® Celeron 6305E CPU-only,3.75,1.14,1.14,0.035,0.250,266.21
+bert-base-cased124,atom,Intel® Celeron 6305E iGPU-only,18.00,6.81,10.60,0.168,1.199,59.82
+bert-base-cased124,atom,Intel® Celeron 6305E CPU+iGPU,19.93,7.70,11.21,0.186,1.328,
+bert-base-cased124,core,Intel® Core™ i3-8100,6.80,4.19,4.22,0.058,0.104,152.39
+bert-base-cased124,core,Intel® Core™ i5-8500,10.26,6.44,6.42,0.053,0.157,104.63
+bert-base-cased124,core,Intel® Core™ i7-8700T,11.06,7.19,7.10,0.036,0.316,98.85
+bert-base-cased124,core,Intel® Core™ i9-10920X,48.23,19.67,19.63,0.068,0.292,21.80
+bert-base-cased124,core,Intel® Core™ i9-10900TE,10.62,6.20,6.11,0.023,0.303,106.09
+bert-base-cased124,core,Intel® Core™ i9-12900 CPU-only,17.87,10.43,10.36,0.034,0.274,56.79
+bert-base-cased124,core,Intel® Core™ i9-12900 iGPU-only,17.60,6.53,10.45,0.033,0.270,59.90
+bert-base-cased124,core,Intel® Core™ i9-12900 CPU+iGPU,25.42,11.09,15.09,0.048,0.391,
+bert-base-cased124,core,Intel® Core™ i7-1185G7 CPU-only,14.79,4.91,4.90,0.034,0.528,71.17
+bert-base-cased124,core,Intel® Core™ i7-1185G7 iGPU-only,26.62,10.85,16.56,0.062,0.950,39.69
+bert-base-cased124,core,Intel® Core™ i7-1185G7 CPU+iGPU,24.98,9.61,13.03,0.058,0.892,
+bert-base-cased124,core,Intel® Core™ i5-10500TE ,9.19,6.07,5.96,0.047,0.262,115.68
+bert-base-cased124,xeon,Intel® Xeon® W1290P,13.97,9.74,9.71,0.025,0.111,61.73
+bert-base-cased124,xeon,Intel® Xeon® E-2124G,8.06,5.05,5.07,0.037,0.113,129.15
+bert-base-cased124,xeon,Intel® Xeon® Silver 4216R,63.54,19.47,19.37,0.063,0.254,34.48
+bert-base-cased124,xeon,Intel® Xeon® Silver 4316,111.56,41.91,42.78,0.103,0.371,20.67
+bert-base-cased124,xeon,Intel® Xeon® Gold 5218T,66.55,18.69,18.75,0.049,0.316,32.99
+bert-base-cased124,xeon,Intel® Xeon® Platinum 8270,145.71,59.57,59.99,0.019,0.355,17.66
+bert-base-cased124,xeon,Intel® Xeon® Platinum 8380,216.98,85.64,87.03,0.026,0.401,12.32

@@ -1,0 +1,4 @@
+pydata-sphinx-theme==0.7.2
+Sphinx
+
+
