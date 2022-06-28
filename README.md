@@ -49,6 +49,6 @@ To add raw ``HTML`` to a ``.rst`` document add a directive:
     <div class="chart-block" data-loadcsv="csv/bert-base-cased124.csv"></div>
 ```
 
-While, it is possible to add ``script`` tags in a raw directive, you'll have to manually copy the referenced file to the correct place in the output manually.
+While, it is possible to add ``script`` tags in a raw directive, you'll have to copy the referenced file to the correct place in the output manually.
 
 Like Python, reStructuredText (.rst) is very sensitive to leading spaces/indents. We prefer to use four spaces per indent rather than tabs.
