@@ -33,7 +33,7 @@ Add files anywhere in the ``_static`` directory.
 
 You can add references to these files in the ``HTML`` output by adding code to the ``conf.py`` in the ``def setup(app)`` method. Note that these references will appear in every single output file for the site and that they are copied to the correct location in the output.
 
-CSS and JavaScript references are added like this (paths are relative to the ``_static`` directory:
+CSS and JavaScript references are added like this (paths are relative to the ``_static`` directory):
 
 ``` python
 def setup(app):
@@ -51,4 +51,5 @@ To add raw ``HTML`` to a ``.rst`` document add a directive:
 
 While, it is possible to add ``script`` tags in a raw directive, you'll have to copy the referenced file to the correct place in the output manually.
 
+**NOTE**
 Like Python, reStructuredText (.rst) is very sensitive to leading spaces/indents. We prefer to use four spaces per indent rather than tabs.
