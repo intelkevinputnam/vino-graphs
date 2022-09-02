@@ -19,6 +19,14 @@ Measuring inference performance involves many variables and is extremely use-cas
 
 * **Latency** - This measures the synchronous execution of inference requests and is reported in milliseconds. Each inference request (for example: preprocess, infer, postprocess) is allowed to complete before the next is started. This performance metric is relevant in usage scenarios where a single image input needs to be acted upon as soon as possible. An example would be the healthcare sector where medical personnel only request analysis of a single ultra sound scanning image or in real-time or near real-time applications for example an industrial robot's response to actions in its environment or obstacle avoidance for autonomous vehicles.
 
+
+testdata [124]
+~~~~~~~~~~~~~~~~~~~~~
+
+.. raw:: html
+
+    <div class="chart-block" data-loadcsv="csv/testdatacsv.csv"></div>
+
 bert-base-cased [124]
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -26,103 +34,6 @@ bert-base-cased [124]
 
     <div class="chart-block" data-loadcsv="csv/bert-base-cased124.csv"></div>
 
-bert-large-uncased-whole-word-masking-squad-int8-0001 [384]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/bert-large-uncased-whole-word-masking-squad-int8-0001-384.csv"></div>
-
-deeplabv3-TF [513x513]
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/deeplabv3-TF-513x513.csv"></div>
-
-densenet-121-TF [224x224]
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/densenet-121-TF-224x224.csv"></div>
-
-efficientdet-d0 [512x512]
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/efficientdet-d0-512x512.csv"></div>
-
-faster-rcnn-resnet50-coco-TF [600x1024]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/faster_rcnn_resnet50_coco-TF-600x1024.csv"></div>
-
-inception-v4-TF [299x299]
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/inception-v4-TF-299x299.csv"></div>
-
-mobilenet-ssd-CF [300x300]
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/mobilenet-ssd-CF-300x300.csv"></div>
-
-mobilenet-v2-pytorch [224x224]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/mobilenet-v2-pytorch-224x224.csv"></div>
-
-resnet-18-pytorch [224x224]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/resnet-18-pytorch-224x224.csv"></div>
-
-resnet_50_TF [224x224]
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/resnet-50-TF-224x224.csv"></div>
-
-ssd-resnet34-1200-onnx [1200x1200]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/ssd-resnet34-1200-onnx-1200x1200.csv"></div>
-
-unet-camvid-onnx-0001 [368x480]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/unet-camvid-onnx-0001-368x480.csv"></div>
-
-yolo-v3-tiny-tf [416x416]
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/yolo-v3-tiny-tf-416x416.csv"></div>
-
-yolo_v4-tf [608x608]
-~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/yolo_v4-tf-608x608.csv"></div>
 
 Platform Configurations
 ~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,3 +1,5 @@
+import { Graph, ExcelDataTransformer } from 'classes.js';
+
 $(document).ready(function () {
     var chartBlock = $('.chart-block');
     chartBlock.each(function () {
@@ -8,12 +10,18 @@ $(document).ready(function () {
         })
     });
 
+    // data: full import data
+    // ieType: object keys of config, the ie
     function getLabels(data, ieType) {
+        console.log(data);
         return data
             .filter((item) => item[1] === ieType)
             .map((item) => item[2]);
     }
 
+
+    // this is the graph data that is used to render the graphs
+    // needs to be built after the filter is selected, not split by ie-types
     var CONFIG = {
         core: {
             throughput: {
@@ -89,6 +97,7 @@ $(document).ready(function () {
         }
     }
 
+    // doesn't seem to be used anywhere so might remove after first main build
     var titleMapping = {
         core: '<h3>Intel® Core™</h3>',
         atom: '<h3>Intel® Atom®</h3>',
@@ -96,6 +105,8 @@ $(document).ready(function () {
         accel: '<h3>Intel® Movidius™ Vision Processing Units</h3>'
     }
 
+
+    // since this is using the ie-type split, will need to refactor away from this
     var labelsMapping = {
         core: null,
         atom: null,
@@ -103,8 +114,20 @@ $(document).ready(function () {
         accel: null
     }
 
+    /**
+     * params:
+     * data: (all imported data)
+     * labels: 
+     * 
+     *
+     * */
+
     function getDataByLabelsAndIndex(data, labels, pos) {
-        return data.filter(item => labels.indexOf(item[2]) !== -1).map(item => parseFloat(item[pos]));
+        console.log('getDataByLabelsAndIndex');
+        // need to refactor not by array index but property map
+        var thing = data.filter(item => labels.indexOf(item[2]) !== -1).map(item => parseFloat(item[pos]));
+        console.log(thing);
+        return thing;
     }
 
     function getChartOptions(title, displayLabels) {
@@ -147,6 +170,9 @@ $(document).ready(function () {
     }
 
     function getChartData(hwType, metric) {
+        console.log(CONFIG);
+        //console.log(CONFIG.hwType.metric.datasets);
+        console.log(Object.entries(CONFIG));
         return {
             labels: labelsMapping[hwType],
             datasets: CONFIG[hwType][metric]['datasets'].map(function (item) {
@@ -163,12 +189,19 @@ $(document).ready(function () {
 
     function renderData(currentChart) {
         return function (result) {
+            console.log(result);
             var data = result.data;
+            var graphDataArray = new ExcelDataTransformer(data).data;
+            var graph = new Graph(graphDataArray);
+            console.log(graph);
+            
             // remove col names
             data.shift(0);
-
+            // array [core, atom, xeon, accel]
             var hwTypes = Object.keys(CONFIG);
+            // graph title
             var chartName = data[1][0];
+            // graph title
             var chartSlug = chartName.replace(')', '').replace(' (', '-');
             var graphContainer = $('<div>');
             var chartContainer = $('<div>');
@@ -176,6 +209,7 @@ $(document).ready(function () {
             chartContainer.addClass('chart-container');
             chartContainer.addClass('container');
 
+            // will need to refactor these to not be by hwtype but by filtered data
             hwTypes.forEach(function (hwType) {
                 // add title
                 var chartWrap = $('<div>');
@@ -183,6 +217,8 @@ $(document).ready(function () {
                 chartWrap.addClass('container');
                 chartContainer.append(chartWrap);
                 var labels = getLabels(data, hwType);
+                console.log('LABELS');
+                console.log(labels);
                 var int8Data = getDataByLabelsAndIndex(data, labels, 3);
                 var fp32Data = getDataByLabelsAndIndex(data, labels, 4);
                 var fp16Data = getDataByLabelsAndIndex(data, labels, 5);
