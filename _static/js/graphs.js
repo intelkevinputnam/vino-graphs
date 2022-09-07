@@ -1,19 +1,27 @@
 // import { Graph, ExcelDataTransformer } from './classes.js';
 class ExcelDataTransformer {
-    constructor(csvdata) {
+
+    static transform(csvdata) {
         const entries = csvdata.filter((entry) => {
             return !entry.includes('begin_rec') && !entry.includes('end_rec');
         });
         // do other purging and data massaging here
-        // else generate 
-        this.data = entries.map((entry) => new GraphData(new ExcelData(entry)));
-
+        // else generate
+        return entries.map((entry, index) => {
+            if (!entry) {
+                console.log(index);
+                console.log('index');
+            }
+            return new GraphData(new ExcelData(entry));
+        });
     }
-    data = [];
 }
 
 class ExcelData {
     constructor(csvdataline) {
+        if (!csvdataline) {
+            return;
+        }
         this.networkModel = csvdataline[0];
         this.release = csvdataline[1];
         this.ieType = csvdataline[2];
@@ -50,6 +58,9 @@ class ExcelData {
 
 class GraphData {
     constructor(excelData) {
+        if (!excelData) {
+            return;
+        }
         this.networkModel = excelData.networkModel;
         this.release = excelData.release;
         this.ieType = excelData.ieType;
@@ -301,7 +312,10 @@ $(document).ready(function () {
         return function (result) {
             console.log(result);
             var data = result.data;
-            var graphDataArray = new ExcelDataTransformer(data).data;
+            data.shift();
+            console.log(data);
+            var graphDataArray = ExcelDataTransformer.transform(data);
+            console.log(graphDataArray);
             var graph = new Graph(graphDataArray);
             console.log(graph);
             
