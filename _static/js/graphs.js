@@ -1,4 +1,28 @@
 // import { Graph, ExcelDataTransformer } from './classes.js';
+class Filter {
+
+    // param: GraphData[]
+    static GetKPIs(graphDataArr, value) {
+        return graphDataArr.filter((data) => v);
+    }
+
+    // param: GraphData[], networkModel
+    static FilterByNetworkModel(graphDataArr, value) {
+        console.log(graphDataArr);
+        return graphDataArr.filter((data) => data.networkModel === value);
+    }
+
+    // param: GraphData[], ieType (atom, core, core-iGPU, core-CPU+iGPU, xeon, accel)
+    static FilterByIeType(graphDataArr, value) {
+        return graphDataArr.filter((data) => data.ieType === value);
+    }
+    
+    // param: GraphData[] (of one networkModel), key (throughput, latency, efficiency, value)
+    static getKpiData(graphDataArr, key) {
+        return graphDataArr.map((data) => data.kpi);
+    }
+
+}
 class ExcelDataTransformer {
 
     static transform(csvdata) {
@@ -118,6 +142,56 @@ class Graph {
         this.data = data;
     }
     data = new GraphData();
+
+    // param: GraphData[]
+    static getPlatformNames(graphDataArr) {
+        return graphDataArr.map((data) => data.platformName);
+    }
+
+    // param: GraphData[]
+    static getDatabyKPI(graphDataArr, kpi) {
+        switch (kpi) {
+            case 'throughput':
+                // returning int8 for now but should scale to select n <= 3 of 3
+                return graphDataArr.map((data) => data.kpi.throughput.int8);
+            case 'latency':
+                return graphDataArr.map((data) => data.kpi.latency);
+            case 'efficiency':
+                return graphDataArr.map((data) => data.kpi.efficiency);
+            case 'value':
+                return graphDataArr.map((data) => data.kpi.value);
+            default:
+                return [];
+        }
+    }
+
+    // this is the function that tells the graph software how to render
+    static getGraphConfig(kpi) {
+        switch (kpi) {
+            case 'throughput':
+                return {
+                    chartTitle: 'Throughput (higher is better)',
+                    datasets: [{ data: null, color: '#00C7FD', label: 'FPS (INT8)' }, { data: null, color: '#0068B5', label: 'FPS (FP32)' }],
+                };
+            case 'latency':
+                return {
+                    chartTitle: 'Latency (lower is better)',
+                    datasets: [{ data: null, color: '#8F5DA2', label: 'Milliseconds' }],
+                };
+            case 'value':
+                return {
+                    chartTitle: 'Value (higher is better)',
+                    datasets: [{ data: null, color: '#00C7FD', label: 'FPS/$ (INT8)' }],
+                };
+            case 'efficiency':
+                return {
+                    chartTitle: 'Efficiency (higher is better)',
+                    datasets: [{ data: null, color: '#00C7FD', label: 'FPS/TDP (INT8)' }],
+                };
+            default:
+                return {};
+        }
+    }
 }
 
 $(document).ready(function () {
@@ -133,7 +207,6 @@ $(document).ready(function () {
     // data: full import data
     // ieType: object keys of config, the ie
     function getLabels(data, ieType) {
-        console.log(data);
         return data
             .filter((item) => item[1] === ieType)
             .map((item) => item[2]);
@@ -245,7 +318,6 @@ $(document).ready(function () {
     function getDataByLabelsAndIndex(data, labels, pos) {
         console.log('getDataByLabelsAndIndex');
         // need to refactor not by array index but property map
-        console.log(data);
         var thing = data.filter(item => labels.indexOf(item[2]) !== -1).map(item => parseFloat(item[pos]));
         console.log(thing);
         return thing;
@@ -291,7 +363,6 @@ $(document).ready(function () {
     }
 
     function getChartData(hwType, metric) {
-        console.log(CONFIG);
         //console.log(CONFIG.hwType.metric.datasets);
         console.log(Object.entries(CONFIG));
         return {
@@ -308,21 +379,38 @@ $(document).ready(function () {
         };
     }
 
+    // params: string[], Datasets[]
+    function getChartDataNew(labels, datasets) {
+        return {
+            labels: labels,
+            datasets: datasets.map((item) => {
+                return {
+                    label: item.label,
+                    data: item.data,
+                    backgroundColor: item.color,
+                    borderColor: 'rgba(170,170,170,0)',
+                    barThickness: 12
+                }
+            })
+        }
+    }
+
     function renderData(currentChart) {
         return function (result) {
             console.log(result);
             var data = result.data;
+            // remove header from csv line
             data.shift();
-            console.log(data);
             var graphDataArray = ExcelDataTransformer.transform(data);
             console.log(graphDataArray);
             var graph = new Graph(graphDataArray);
             console.log(graph);
             
             // remove col names
-            data.shift(0);
             // array [core, atom, xeon, accel]
             var hwTypes = Object.keys(CONFIG);
+            console.log('hardware types!');
+            console.log(hwTypes);
             // graph title
             var chartName = data[1][0];
             // graph title
@@ -333,84 +421,155 @@ $(document).ready(function () {
             chartContainer.addClass('chart-container');
             chartContainer.addClass('container');
 
+            var renderGraph = Filter.FilterByNetworkModel(graph.data, 'deeplabv3-TF [513x513]');
+            console.log(renderGraph);
+            renderGraph = Filter.FilterByIeType(renderGraph, 'atom');
+            console.log(renderGraph);
+
+            if(renderGraph) {
+                createChartWithNewData(renderGraph, 'atom', chartContainer);
+            }
+
             // will need to refactor these to not be by hwtype but by filtered data
+            // for every hardware type, generate a graph (iter. up to 4 times)
             hwTypes.forEach(function (hwType) {
-                // add title
-                var chartWrap = $('<div>');
-                chartWrap.addClass('chart-wrap');
-                chartWrap.addClass('container');
-                chartContainer.append(chartWrap);
-                var labels = getLabels(data, hwType);
-                console.log('LABELS');
-                console.log(labels);
-                var int8Data = getDataByLabelsAndIndex(data, labels, 3);
-                var fp32Data = getDataByLabelsAndIndex(data, labels, 4);
-                var fp16Data = getDataByLabelsAndIndex(data, labels, 5);
-                var valueData = getDataByLabelsAndIndex(data, labels, 6);
-                var efficiencyData = getDataByLabelsAndIndex(data, labels, 7);
-                var latencyData = getDataByLabelsAndIndex(data, labels, 8);
-
-                labelsMapping[hwType] = labels
-                if (hwType === 'accel') {
-                    CONFIG[hwType].throughput.datasets[0].data = fp16Data;
-                }
-                else {
-                    CONFIG[hwType].throughput.datasets[0].data = int8Data;
-                    CONFIG[hwType].throughput.datasets[1].data = fp32Data;
-                }
-                CONFIG[hwType].latency.datasets[0].data = latencyData;
-                CONFIG[hwType].value.datasets[0].data = valueData;
-                CONFIG[hwType].efficiency.datasets[0].data = efficiencyData;
-
-                metrics = Object.keys(CONFIG[hwType]).filter((metric) => hasData(hwType, metric));
-
-                var througputLatency = $('<div>');
-                througputLatency.addClass('row');
-                var efficiencyValue = $('<div>');
-                efficiencyValue.addClass('row');
-
-                chartWrap.append(througputLatency);
-                chartWrap.append(efficiencyValue);
-
-                var displayWidth = $(window).width();
-
-                if (metrics.includes('throughput') && metrics.includes('latency')) {
-                    processMetric(hwType, 'throughput', througputLatency, 'col-md-8', true);
-                    if (displayWidth < 450) {
-                        processMetric(hwType, 'latency', througputLatency, 'col-md-4', true);
-                    }
-                    else {
-                        processMetric(hwType, 'latency', througputLatency, 'col-md-4', false);
-                    }
-                }
-                else if (metrics.includes('throughput')) {
-                    processMetric(hwType, 'throughput', througputLatency, 'col-md-12', true);
-                }
-                else if (metrics.includes('latency')) {
-                    processMetric(hwType, 'latency', througputLatency, 'col-md-12', true);
-                }
-
-                if (metrics.includes('efficiency') && metrics.includes('value')) {
-                    processMetric(hwType, 'efficiency', througputLatency, 'col-md-8', true);
-                    if (displayWidth < 450) {
-                        processMetric(hwType, 'value', througputLatency, 'col-md-4', true);
-                    }
-                    else {
-                        processMetric(hwType, 'value', througputLatency, 'col-md-4', false);
-                    }
-                }
-                else if (metrics.includes('efficiency')) {
-                    processMetric(hwType, 'efficiency', througputLatency, 'col-md-6', true);
-                }
-                else if (metrics.includes('value')) {
-                    processMetric(hwType, 'value', througputLatency, 'col-md-6', true);
-                }
-
-            })
+                
+                createChart(data, hwType, chartContainer);
+            });
             currentChart.append(chartContainer);
         }
 
+        // this function should take the final data set and turn it into graphs
+        // params: GraphData[], unused, chartContainer
+        function createChartWithNewData(data, hwType, chartContainer) {
+            // add title
+            console.log(data);
+            var chartWrap = $('<div>');
+            chartWrap.addClass('chart-wrap');
+            chartWrap.addClass('container');
+            chartContainer.append(chartWrap);
+            var labels = Graph.getPlatformNames(data);
+            console.log('LABELS');
+            console.log(labels);
+
+            var graphConfig = Graph.getGraphConfig('value');
+            console.log(graphConfig);
+
+            graphConfig.datasets[0].data = Graph.getDatabyKPI(data, 'value');
+            console.log(graphConfig.datasets[0].data);
+
+            var graphClass = $('<div>');
+            graphClass.addClass('row');
+
+            chartWrap.append(graphClass);
+
+            var displayWidth = $(window).width();
+
+            processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-8', true);
+
+        }
+
+        function createChart(data, hwType, chartContainer) {
+            // add title
+            var chartWrap = $('<div>');
+            chartWrap.addClass('chart-wrap');
+            chartWrap.addClass('container');
+            chartContainer.append(chartWrap);
+            var labels = getLabels(data, hwType);
+            var int8Data = getDataByLabelsAndIndex(data, labels, 3);
+            var fp32Data = getDataByLabelsAndIndex(data, labels, 4);
+            var fp16Data = getDataByLabelsAndIndex(data, labels, 5);
+            var valueData = getDataByLabelsAndIndex(data, labels, 6);
+            var efficiencyData = getDataByLabelsAndIndex(data, labels, 7);
+            var latencyData = getDataByLabelsAndIndex(data, labels, 8);
+
+            labelsMapping[hwType] = labels
+            if (hwType === 'accel') {
+                CONFIG[hwType].throughput.datasets[0].data = fp16Data;
+            }
+            else {
+                CONFIG[hwType].throughput.datasets[0].data = int8Data;
+                CONFIG[hwType].throughput.datasets[1].data = fp32Data;
+            }
+            CONFIG[hwType].latency.datasets[0].data = latencyData;
+            CONFIG[hwType].value.datasets[0].data = valueData;
+            CONFIG[hwType].efficiency.datasets[0].data = efficiencyData;
+
+            metrics = Object.keys(CONFIG[hwType]).filter((metric) => hasData(hwType, metric));
+
+            var througputLatency = $('<div>');
+            througputLatency.addClass('row');
+            var efficiencyValue = $('<div>');
+            efficiencyValue.addClass('row');
+
+            chartWrap.append(througputLatency);
+            chartWrap.append(efficiencyValue);
+
+            var displayWidth = $(window).width();
+
+            if (metrics.includes('throughput') && metrics.includes('latency')) {
+                processMetric(hwType, 'throughput', througputLatency, 'col-md-8', true);
+                if (displayWidth < 450) {
+                    processMetric(hwType, 'latency', througputLatency, 'col-md-4', true);
+                }
+                else {
+                    processMetric(hwType, 'latency', througputLatency, 'col-md-4', false);
+                }
+            }
+            else if (metrics.includes('throughput')) {
+                processMetric(hwType, 'throughput', througputLatency, 'col-md-12', true);
+            }
+            else if (metrics.includes('latency')) {
+                processMetric(hwType, 'latency', througputLatency, 'col-md-12', true);
+            }
+
+            if (metrics.includes('efficiency') && metrics.includes('value')) {
+                processMetric(hwType, 'efficiency', througputLatency, 'col-md-8', true);
+                if (displayWidth < 450) {
+                    processMetric(hwType, 'value', througputLatency, 'col-md-4', true);
+                }
+                else {
+                    processMetric(hwType, 'value', througputLatency, 'col-md-4', false);
+                }
+            }
+            else if (metrics.includes('efficiency')) {
+                processMetric(hwType, 'efficiency', througputLatency, 'col-md-6', true);
+            }
+            else if (metrics.includes('value')) {
+                processMetric(hwType, 'value', througputLatency, 'col-md-6', true);
+            }
+        }
+
+        function processMetricNew(labels, datasets, chartTitle, container, widthClass, displayLabels) {
+            var chart = $('<div>');
+            chart.addClass('chart');
+            chart.addClass(widthClass);
+            chart.height(4 * 55 + 30);
+            var canvas = $('<canvas>');
+            chart.append(canvas);
+            container.append(chart);
+            var context = canvas.get(0).getContext('2d');
+            context.canvas.height = 4 * 55 + 30;
+            if (widthClass === 'col-md-8') {
+                context.canvas.width = context.canvas.width * 1.5;
+            }
+            else if(widthClass === 'col-md-12') {
+                context.canvas.width = context.canvas.width * 2.5;
+            }
+            new Chart(context, {
+                type: 'horizontalBar',
+                data: getChartDataNew(labels, datasets),
+                options: getChartOptions(chartTitle, displayLabels)
+            });
+        }
+
         function processMetric(hwType, metric, container, widthClass, displayLabels) {
+            console.log('processmetric');
+            console.log(hwType);
+            console.log(metric);
+            console.log(container);
+            console.log(widthClass);
+            console.log(displayLabels);
             var chart = $('<div>');
             chart.addClass('chart');
             chart.addClass(widthClass);
