@@ -406,13 +406,9 @@ $(document).ready(function () {
             var graph = new Graph(graphDataArray);
             console.log(graph);
             
-            // remove col names
-            // array [core, atom, xeon, accel]
-            var hwTypes = Object.keys(CONFIG);
-            console.log('hardware types!');
-            console.log(hwTypes);
             // graph title
-            var chartName = data[1][0];
+            console.log(data);
+            var chartName = graph.data[0].networkModel;
             // graph title
             var chartSlug = chartName.replace(')', '').replace(' (', '-');
             var graphContainer = $('<div>');
@@ -421,14 +417,17 @@ $(document).ready(function () {
             chartContainer.addClass('chart-container');
             chartContainer.addClass('container');
 
-            var renderGraph = Filter.FilterByNetworkModel(graph.data, 'deeplabv3-TF [513x513]');
-            console.log(renderGraph);
-            renderGraph = Filter.FilterByIeType(renderGraph, 'atom');
-            console.log(renderGraph);
+            var filteredGraphData = Filter.FilterByNetworkModel(graph.data, 'bert-base-cased[124]');
+            filteredGraphData = Filter.FilterByIeType(filteredGraphData, 'xeon');
 
-            if(renderGraph) {
-                createChartWithNewData(renderGraph, 'atom', chartContainer);
+            if(filteredGraphData) {
+                createChartWithNewData(filteredGraphData, chartContainer);
             }
+
+            // array [core, atom, xeon, accel]
+            var hwTypes = Object.keys(CONFIG);
+            console.log('hardware types!');
+            console.log(hwTypes);
 
             // will need to refactor these to not be by hwtype but by filtered data
             // for every hardware type, generate a graph (iter. up to 4 times)
@@ -441,9 +440,7 @@ $(document).ready(function () {
 
         // this function should take the final data set and turn it into graphs
         // params: GraphData[], unused, chartContainer
-        function createChartWithNewData(data, hwType, chartContainer) {
-            // add title
-            console.log(data);
+        function createChartWithNewData(data, chartContainer) {
             var chartWrap = $('<div>');
             chartWrap.addClass('chart-wrap');
             chartWrap.addClass('container');
@@ -463,7 +460,8 @@ $(document).ready(function () {
 
             chartWrap.append(graphClass);
 
-            var displayWidth = $(window).width();
+            // might need this line for multiple graphs on a page
+            //var displayWidth = $(window).width();
 
             processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-8', true);
 
@@ -544,12 +542,12 @@ $(document).ready(function () {
             var chart = $('<div>');
             chart.addClass('chart');
             chart.addClass(widthClass);
-            chart.height(4 * 55 + 30);
+            chart.height(labels.length * 55 + 30);
             var canvas = $('<canvas>');
             chart.append(canvas);
             container.append(chart);
             var context = canvas.get(0).getContext('2d');
-            context.canvas.height = 4 * 55 + 30;
+            context.canvas.height = labels.length * 55 + 30;
             if (widthClass === 'col-md-8') {
                 context.canvas.width = context.canvas.width * 1.5;
             }
