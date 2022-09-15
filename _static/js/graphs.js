@@ -1,20 +1,14 @@
 // import { Graph, ExcelDataTransformer } from './classes.js';
 class Filter {
 
-    // param: GraphData[]
-    static GetKPIs(graphDataArr, value) {
-        return graphDataArr.filter((data) => v);
+    // param: GraphData[], networkModel[]
+    static FilterByNetworkModel(graphDataArr, values) {
+        return graphDataArr.filter((data) => values.includes(data.networkModel));
     }
 
-    // param: GraphData[], networkModel
-    static FilterByNetworkModel(graphDataArr, value) {
-        console.log(graphDataArr);
-        return graphDataArr.filter((data) => data.networkModel === value);
-    }
-
-    // param: GraphData[], ieType (atom, core, core-iGPU, core-CPU+iGPU, xeon, accel)
-    static FilterByIeType(graphDataArr, value) {
-        return graphDataArr.filter((data) => data.ieType === value);
+    // param: GraphData[], ieType[] (atom, core, core-iGPU, core-CPU+iGPU, xeon, accel)
+    static FilterByIeType(graphDataArr, values) {
+        return graphDataArr.filter((data) => values.includes(data.ieType));
     }
     
     // param: GraphData[] (of one networkModel), key (throughput, latency, efficiency, value)
@@ -316,11 +310,8 @@ $(document).ready(function () {
      * */
 
     function getDataByLabelsAndIndex(data, labels, pos) {
-        console.log('getDataByLabelsAndIndex');
         // need to refactor not by array index but property map
-        var thing = data.filter(item => labels.indexOf(item[2]) !== -1).map(item => parseFloat(item[pos]));
-        console.log(thing);
-        return thing;
+        return data.filter(item => labels.indexOf(item[2]) !== -1).map(item => parseFloat(item[pos]));
     }
 
     function getChartOptions(title, displayLabels) {
@@ -364,7 +355,6 @@ $(document).ready(function () {
 
     function getChartData(hwType, metric) {
         //console.log(CONFIG.hwType.metric.datasets);
-        console.log(Object.entries(CONFIG));
         return {
             labels: labelsMapping[hwType],
             datasets: CONFIG[hwType][metric]['datasets'].map(function (item) {
@@ -417,8 +407,8 @@ $(document).ready(function () {
             chartContainer.addClass('chart-container');
             chartContainer.addClass('container');
 
-            var filteredGraphData = Filter.FilterByNetworkModel(graph.data, 'bert-base-cased[124]');
-            filteredGraphData = Filter.FilterByIeType(filteredGraphData, 'xeon');
+            var filteredGraphData = Filter.FilterByNetworkModel(graph.data, ['bert-base-cased[124]']);
+            filteredGraphData = Filter.FilterByIeType(filteredGraphData, ['xeon', 'atom']);
 
             if(filteredGraphData) {
                 createChartWithNewData(filteredGraphData, chartContainer);
@@ -449,21 +439,26 @@ $(document).ready(function () {
             console.log('LABELS');
             console.log(labels);
 
-            var graphConfig = Graph.getGraphConfig('value');
-            console.log(graphConfig);
-
-            graphConfig.datasets[0].data = Graph.getDatabyKPI(data, 'value');
-            console.log(graphConfig.datasets[0].data);
+            var kpis = ['value', 'efficiency'];
+            var graphConfigs = kpis.map((kpi) => {
+                var config = Graph.getGraphConfig(kpi);
+                config.datasets[0].data = Graph.getDatabyKPI(data, kpi);
+                return config;
+            });
+            console.log(graphConfigs);
 
             var graphClass = $('<div>');
             graphClass.addClass('row');
-
             chartWrap.append(graphClass);
+
+            graphConfigs.forEach((graphConfig) => {
+                processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-8', true);
+            });
 
             // might need this line for multiple graphs on a page
             //var displayWidth = $(window).width();
 
-            processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-8', true);
+            
 
         }
 
@@ -562,12 +557,6 @@ $(document).ready(function () {
         }
 
         function processMetric(hwType, metric, container, widthClass, displayLabels) {
-            console.log('processmetric');
-            console.log(hwType);
-            console.log(metric);
-            console.log(container);
-            console.log(widthClass);
-            console.log(displayLabels);
             var chart = $('<div>');
             chart.addClass('chart');
             chart.addClass(widthClass);
