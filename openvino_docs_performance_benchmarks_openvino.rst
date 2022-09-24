@@ -20,20 +20,14 @@ Measuring inference performance involves many variables and is extremely use-cas
 * **Latency** - This measures the synchronous execution of inference requests and is reported in milliseconds. Each inference request (for example: preprocess, infer, postprocess) is allowed to complete before the next is started. This performance metric is relevant in usage scenarios where a single image input needs to be acted upon as soon as possible. An example would be the healthcare sector where medical personnel only request analysis of a single ultra sound scanning image or in real-time or near real-time applications for example an industrial robot's response to actions in its environment or obstacle avoidance for autonomous vehicles.
 
 
-testdata [124]
-~~~~~~~~~~~~~~~~~~~~~
+Benchmark Graph Builder
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. raw:: html
+
+    <button id="build-graphs-btn">Build Graphs</button>
 
     <div class="chart-block" data-loadcsv="csv/testdatacsv.csv"></div>
-
-bert-base-cased [124]
-~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <div class="chart-block" data-loadcsv="csv/bert-base-cased124.csv"></div>
-
 
 Platform Configurations
 ~~~~~~~~~~~~~~~~~~~~~~~
