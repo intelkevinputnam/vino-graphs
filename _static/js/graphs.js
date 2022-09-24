@@ -235,6 +235,7 @@ $(document).ready(function () {
         return arr[Math.floor(Math.random() * arr.length)];
     }
     function clickBuildGraphs() {
+        document.getElementById('ov-chart-container').remove();
         console.log('Build Graphs Button being clicked');
         var chartBlock = $('.chart-block');
         chartBlock.each(function () {
@@ -459,6 +460,7 @@ $(document).ready(function () {
             var chartContainer = $('<div>');
             // apply graph title temporary readdress
             chartContainer.prepend('<h3>' + NETWORKMODEL + '</h3>');
+            chartContainer.attr('id', 'ov-chart-container');
             //-----
             graphContainer.attr('id', 'ov-graph-container-' + chartSlug);
             chartContainer.addClass('chart-container');
