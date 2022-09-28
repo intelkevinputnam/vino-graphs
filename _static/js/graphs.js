@@ -326,7 +326,7 @@ $(document).ready(function () {
 
     function getChartOptions(title, displayLabels) {
         return {
-            responsive: false,
+            responsive: true,
             maintainAspectRatio: false,
             legend: { display: true, position: 'bottom' },
             title: {
@@ -426,16 +426,6 @@ $(document).ready(function () {
                 createChartWithNewData(filteredGraphData, chartContainer, KPIS);
             }
 
-            // array [core, atom, xeon, accel]
-            var hwTypes = Object.keys(CONFIG);
-            console.log('hardware types!');
-            console.log(hwTypes);
-
-            // will need to refactor these to not be by hwtype but by filtered data
-            // for every hardware type, generate a graph (iter. up to 4 times)
-            hwTypes.forEach(function (hwType) {
-                createChart(data, hwType, chartContainer);
-            });
             currentChart.append(chartContainer);
         }
 
