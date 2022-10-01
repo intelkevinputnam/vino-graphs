@@ -200,7 +200,7 @@ $(document).ready(function () {
             complete: renderData($(this))
         })
     });
-    document.getElementById('build-graphs-btn').addEventListener('click', clickBuildGraphs);
+    document.getElementById('build-graphs-btn').addEventListener('click', clickConfigureGraphs);
 
     // placeholder random filters
     function getNetworkModel() {
@@ -234,8 +234,12 @@ $(document).ready(function () {
         ];
         return arr[Math.floor(Math.random() * arr.length)];
     }
+    function clickConfigureGraphs() {
+        //document.getElementById('ov-chart-container').remove();
+        showModal();
+    }
+
     function clickBuildGraphs() {
-        document.getElementById('ov-chart-container').remove();
         console.log('Build Graphs Button being clicked');
         var chartBlock = $('.chart-block');
         chartBlock.each(function () {
@@ -247,81 +251,53 @@ $(document).ready(function () {
         });
     }
 
-    // this is the graph data that is used to render the graphs
-    // needs to be built after the filter is selected, not split by ie-types
-    var CONFIG = {
-        core: {
-            throughput: {
-                chartTitle: 'Throughput (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS (INT8)' }, { data: null, color: '#0068B5', label: 'FPS (FP32)' }],
-            },
-            latency: {
-                chartTitle: 'Latency (lower is better)',
-                datasets: [{ data: null, color: '#8F5DA2', label: 'Milliseconds' }],
-            },
-            value: {
-                chartTitle: 'Value (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS/$ (INT8)' }],
-            },
-            efficiency: {
-                chartTitle: 'Efficiency (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS/TDP (INT8)' }],
-            }
-        },
-        atom: {
-            throughput: {
-                chartTitle: 'Throughput (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS (INT8)' }, { data: null, color: '#0068B5', label: 'FPS (FP32)' }],
-            },
-            latency: {
-                chartTitle: 'Latency (lower is better)',
-                datasets: [{ data: null, color: '#8F5DA2', label: 'Milliseconds' }],
-            },
-            value: {
-                chartTitle: 'Value (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS/$ (INT8)' }],
-            },
-            efficiency: {
-                chartTitle: 'Efficiency (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS/TDP (INT8)' }],
-            }
-        },
-        xeon: {
-            throughput: {
-                chartTitle: 'Throughput (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS (INT8)' }, { data: null, color: '#0068B5', label: 'FPS (FP32)' }],
-            },
-            latency: {
-                chartTitle: 'Latency (lower is better)',
-                datasets: [{ data: null, color: '#8F5DA2', label: 'Milliseconds' }],
-            },
-            value: {
-                chartTitle: 'Value (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS/$ (INT8)' }],
-            },
-            efficiency: {
-                chartTitle: 'Efficiency (higher is better)',
-                datasets: [{ data: null, color: '#00C7FD', label: 'FPS/TDP (INT8)' }],
-            }
-        },
-        accel: {
-            throughput: {
-                chartTitle: 'Throughput (higher is better)',
-                datasets: [{ data: null, color: '#8BAE46', label: 'FPS (FP16)' }],
-            },
-            latency: {
-                chartTitle: 'Latency (lower is better)',
-                datasets: [{ data: null, color: '#8F5DA2', label: 'Milliseconds' }],
-            },
-            value: {
-                chartTitle: 'Value (higher is better)',
-                datasets: [{ data: null, color: '#8BAE46', label: 'FPS (FP16)' }]
-            },
-            efficiency: {
-                chartTitle: 'Efficiency (higher is better)',
-                datasets: [{ data: null, color: '#8BAE46', label: 'FPS (FP16)' }]
-            }
+    function hideModal() {
+        $('#graphModal').hide();
+    }
+
+    function showModal() {
+        //document.getElementById('graphModal').remove();
+
+        if ($('#graphModal').length) {
+            $('#graphModal').show();
+            return;
         }
+
+        fetch('_static/html/modal.html').then((response) => response.text()).then((text) => {
+            var modal = $('<div>');
+            modal.attr('id', 'graphModal');
+            modal.addClass('modal');
+
+            var modalContent = $(text);
+            console.log(modalContent);
+            modalContent.attr('id', 'graphModalContent');
+            modalContent.addClass('modal-content');
+            modal.append(modalContent);
+
+
+            var elem = document.querySelector('.container-xl');
+            console.log(elem);
+            $(elem).prepend(modal);
+            
+
+            $('#modal-build-graphs-btn').on('click', function() {
+                clickBuildGraphs();
+            });
+
+            $('.modal-close').on('click', function() {
+                hideModal();
+            });
+
+
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+
     }
 
     function getChartOptions(title, displayLabels) {
@@ -402,19 +378,15 @@ $(document).ready(function () {
             var graphContainer = $('<div>');
             var chartContainer = $('<div>');
             // apply graph title temporary readdress
-            chartContainer.prepend('<h3>' + NETWORKMODEL + '</h3>');
+
+            var chartContainerHeader = $('<h4>' + NETWORKMODEL + '</h4>')
+            chartContainerHeader.addClass('modal-model-header');
+            chartContainer.prepend(chartContainerHeader);
             chartContainer.attr('id', 'ov-chart-container');
-            //-----
+
             graphContainer.attr('id', 'ov-graph-container-' + chartSlug);
             chartContainer.addClass('chart-container');
             chartContainer.addClass('container');
-
-            // ---------------------- Filters ---------------------------
-
-            //var networkModels = ['bert-base-cased[124]'];
-            //var ieType = 'atom';
-
-            // -------------------------------------------------
 
             // Array of Arrays
             var filteredNetworkModels = [...NETWORKMODEL].map((networkModel) => Filter.FilterByNetworkModel(graph.data, networkModel));
@@ -426,7 +398,8 @@ $(document).ready(function () {
                 createChartWithNewData(filteredGraphData, chartContainer, KPIS);
             }
 
-            currentChart.append(chartContainer);
+            $(document.getElementById('benchmark-graph-results-header')).append(chartContainer);
+            //currentChart.append(chartContainer);
         }
 
         // this function should take the final data set and turn it into graphs
