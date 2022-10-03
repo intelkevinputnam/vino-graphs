@@ -46,6 +46,7 @@ $(document).ready(function () {
     }
     addLegalNotice();
     updateSearchForm();
+    initBenchmarkPickers();
     createSphinxTabSets();
 });
 
@@ -282,4 +283,17 @@ function init_switchers() {
 
     $('main').prepend(switcherPanel);
     switcherAnchors.remove();
+}
+
+function initBenchmarkPickers() {
+  $('.picker-options .option').on('click', function(event) {
+    const selectedOption = $(this).data('option');
+    $('.picker-options .selectable').each(function() {
+      $(this).removeClass('selected');
+      const toSelect = this.classList.contains(selectedOption);
+      if(toSelect) {
+        $(this).addClass('selected');
+      }
+    });
+  });
 }

@@ -226,3 +226,42 @@ main .searchForm {
     margin-bottom: 2rem;
     margin-top: 2rem;
 }
+
+
+.picker-options {
+  margin: 15px 0;
+}
+
+.picker-options .option {
+  padding: 10px;
+  font-size: medium;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.picker-options .option.selected {
+  border-bottom: 2px solid #0068B5;
+}
+
+
+.picker-options .option.throughput::before {
+  content: url('media/icon-throughput.svg');
+}
+.picker-options .option.value::before {
+  content: url('media/icon-value.svg');
+}
+.picker-options .option.efficiency::before {
+  content: url('media/icon-efficiency.svg');
+}
+.picker-options .option.latency::before {
+  content: url('media/icon-latency.svg');
+}
+
+.picker-options p.selected {
+  display: block;
+}
+
+.picker-options p {
+  padding: 10px 0;
+  display: none;
+}
