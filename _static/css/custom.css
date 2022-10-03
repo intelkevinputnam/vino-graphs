@@ -139,16 +139,16 @@ main  .searchForm {
 
 
 .picker-options .option.throughput::before {
-  content: url('media/throughput-icon.svg');
+  content: url('media/icon-throughput.svg');
 }
 .picker-options .option.value::before {
-  content: url('media/value-icon.svg');
+  content: url('media/icon-value.svg');
 }
 .picker-options .option.efficiency::before {
-  content: url('media/efficiency-icon.svg');
+  content: url('media/icon-efficiency.svg');
 }
 .picker-options .option.latency::before {
-  content: url('media/latency-icon.svg');
+  content: url('media/icon-latency.svg');
 }
 
 .picker-options p.selected {
