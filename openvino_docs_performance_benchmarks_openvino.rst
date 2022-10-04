@@ -46,8 +46,6 @@ Benchmark Graph Builder
 
     <button id="build-graphs-btn">Build Graphs</button>
 
-    <div class="chart-block" data-loadcsv="csv/testdatacsv.csv"></div>
-
 Platform Configurations
 ~~~~~~~~~~~~~~~~~~~~~~~
 

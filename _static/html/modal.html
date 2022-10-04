@@ -31,56 +31,26 @@
         </div>
     </div>
     <div class="modal-content-grid-container">
-        <div class="models-column-one">
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-        </div>
-        <div class="models-column-two">
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-            <div><input type="checkbox"><label>bert-based-case [124]</label></div>
-        </div>
-        <div class="modal-grid-item">
-            <div><input type="radio"><label>platform</label></div>
-            <div><input type="radio"><label>platform</label></div>
-            <div><input type="radio"><label>platform</label></div>
-            <div><input type="radio"><label>platform</label></div>
-        </div>
-        <div class="modal-grid-item">
-            <button stlye="float:left; font-size: .4rem">CPU</button>
+        <div class="models-column-one"></div>
+        <div class="models-column-two"></div>
+        <div class="ietype-column"></div>
+        <div class="client-platform-column">
+            <!-- <button stlye="float:left; font-size: .4rem">CPU</button>
             <button stlye="float:left; font-size: .4rem">iGPU</button>
-            <button stlye="float:left; font-size: .4rem">CPU+iGPU</button>
-            <div><input type="checkbox"><label>client platform</label></div>
-            <div><input type="checkbox"><label>client platform</label></div>
-            <div><input type="checkbox"><label>client platform</label></div>
-            <div><input type="checkbox"><label>client platform</label></div>
-            <div><input type="checkbox"><label>client platform</label></div>
+            <button stlye="float:left; font-size: .4rem">CPU+iGPU</button> -->
         </div>
-        <div class="modal-grid-item">
-            <div><input type="checkbox"><label>Throughput</label></div>
-            <div><input type="checkbox"><label>Value</label></div>
-            <div><input type="checkbox"><label>Efficiency</label></div>
-            <div><input type="checkbox"><label>Latency</label></div>
-        </div>
-        <div class="modal-grid-item">
-            <button stlye="float:left">INT8</button>
+        <div class="kpi-column"></div>
+        <div class="precisions-column">
+            <!-- <button stlye="float:left">INT8</button>
             <button stlye="float:left">FP16</button>
-            <button stlye="float:left">FP32</button>
+            <button stlye="float:left">FP32</button> -->
         </div>
     </div>
     <div class="modal-content-footer"><button id="modal-build-graphs-btn" class="modal-build-graphs-btn">Build Graphs</button></div>
     <div class="modal-line-divider"></div>
     <div id="benchmark-graph-results-header">
         <h3>STEP 2: Benchmark Graph Results</h3>
+        <div class="chart-placeholder"></div>
     </div>
     <div class="modal-line-divider"></div>
 </div>
