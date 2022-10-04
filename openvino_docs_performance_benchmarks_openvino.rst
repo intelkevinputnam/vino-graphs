@@ -44,7 +44,7 @@ Benchmark Graph Builder
 
 .. raw:: html
 
-    <button id="build-graphs-btn">Build Graphs</button>
+    <button id="build-graphs-btn" class="configure-graphs-btn">Configure Graphs</button>
 
 Platform Configurations
 ~~~~~~~~~~~~~~~~~~~~~~~

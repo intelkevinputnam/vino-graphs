@@ -10,6 +10,13 @@ main img {
     margin-bottom: 0;
 }
 
+.configure-graphs-btn {
+    padding: 4px 20px;
+    background-color: #0054AE;
+    border-color: #0054AE;
+    color: #fefefe;
+}
+
 /* Performance Benchmark Graphs */
 
 .chart {
@@ -81,20 +88,27 @@ main img {
 
 .modal-header-grid-container {
     display: grid;
-    grid-template-columns: 35% 15% 15% 15% 15% 15%;
+    grid-template-columns: 40% 10% 20% 10% 10% 5%;
     column-gap: 10px;
 }
 
 .modal-content-grid-container {
     display: grid;
     padding-top: 8px;
-    grid-template-columns: 20% 15% 15% 15% 15% 15% 15%;
+    grid-template-columns: 20% 20% 10% 20% 10% 10% 5%;
     column-gap: 10px;
 }
 
 .modal-content-grid-container label {
     margin-bottom: 0;
-    padding-left: 8px;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-left: 12px;
+}
+
+.modal-content-grid-container input {
+     background-color: #0054AE;
+     margin-left: -14px;
 }
 
 .modal-header-grid-item h5 {
