@@ -8,7 +8,7 @@ class Filter {
 
     // param: GraphData[], ieType
     static FilterByIeType(graphDataArr, value) {
-        return graphDataArr.filter((data) => data.ieType === value);
+        return graphDataArr.filter((data) => data.ieType.includes(value));
     }
 
     // param: GraphData[] (of one networkModel), key (throughput, latency, efficiency, value)
