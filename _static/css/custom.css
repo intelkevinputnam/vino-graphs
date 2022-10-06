@@ -93,17 +93,19 @@ main img {
 .modal-header-grid-container {
     display: grid;
     padding-left: 16px;
-    grid-template-columns: 40% 10% 20% 10% 10% 5%;
+    padding-right: 64px;
+    grid-template-columns: 40% 20% 20% 10% 10%;
     column-gap: 16px;
 }
 
 .modal-content-grid-container {
     display: grid;
     padding-left: 32px;
+    padding-right: 64px;
     padding-top: 8px;
-    grid-template-columns: 20% 20% 10% 20% 10% 10% 5%;
+    grid-template-columns: 20% 20% 20% 20% 10% 10%;
     column-gap: 16px;
-    font-size: .8rem;
+    font-size: .78rem;
 }
 
 .modal-content-grid-container label {
@@ -121,7 +123,7 @@ main img {
 }
 
 .modal-header-grid-item h5 {
-    font-weight: 600;
+    font-weight: 530;
     margin: 0;
 }
 

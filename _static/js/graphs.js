@@ -137,6 +137,20 @@ class Graph {
     }
     data = new GraphData();
 
+    static getIeTypeText(ietype) {
+        switch (ietype) {
+            case 'core':
+                return 'Client Platforms (Intel® Core™)';
+            case 'xeon':
+                return 'Server Platforms (Intel® Xeon®)';
+            case 'atom':
+                return 'Mobile Platforms (Intel® Atom™)';
+            case 'accel':
+                return 'Accelerator Platforms';
+            default:
+                return '';
+        }
+    }
 
     // functions to get unique keys 
     static getNetworkModels(graphDataArr) {
@@ -249,8 +263,6 @@ $(document).ready(function () {
     //     return arr[Math.floor(Math.random() * arr.length)];
     // }
 
-
-
     function clickBuildGraphs(graph, networkModels, ietype, platforms, kpis) {
         renderData(graph, networkModels, ietype, platforms, kpis);
     }
@@ -337,12 +349,15 @@ $(document).ready(function () {
             modal.find('.models-column-two').append(models.slice(models.length / 2));
 
             const types = ieTypes.map((ieType) => {
-                const item = $('<div>');
-                const radio = $('<input type="radio" name="ietype"/>');
-                item.append(radio);
-                item.append($('<label>' + ieType + '</label>'));
-                radio.attr('data-ietype', ieType);
-                return item;
+                var labelText = Graph.getIeTypeText(ieType);
+                if (labelText) {
+                    const item = $('<div>');
+                    const radio = $('<input type="radio" name="ietype"/>');
+                    item.append(radio);
+                    item.append($('<label>' + Graph.getIeTypeText(ieType) + '</label>'));
+                    radio.attr('data-ietype', ieType);
+                    return item;
+                }
             });
             modal.find('.ietype-column').append(types);
 
