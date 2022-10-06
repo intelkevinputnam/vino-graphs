@@ -446,11 +446,6 @@ $(document).ready(function () {
     }
 
 
-    function createModel() {
-
-    }
-
-
     function getChartOptions(title, displayLabels) {
         return {
             responsive: true,

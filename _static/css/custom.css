@@ -10,6 +10,10 @@ main img {
     margin-bottom: 0;
 }
 
+.configure-graphs-header {
+    padding-left: 16px;
+}
+
 .configure-graphs-btn {
     padding: 4px 20px;
     background-color: #0054AE;
@@ -59,14 +63,14 @@ main img {
     overflow-y: scroll;
 }
 
-.modal .models-column-one label{
+.modal .models-column-one label {
     word-break: break-word;
 }
 
 .modal-content {
     background-color: #fefefe;
     margin: 5% auto;
-    padding: 20px;
+    padding: 36px;
     border: 1px solid #888;
     width: 95%;
     /* Could be more or less, depending on screen size */
@@ -88,27 +92,32 @@ main img {
 
 .modal-header-grid-container {
     display: grid;
+    padding-left: 16px;
     grid-template-columns: 40% 10% 20% 10% 10% 5%;
-    column-gap: 10px;
+    column-gap: 16px;
 }
 
 .modal-content-grid-container {
     display: grid;
+    padding-left: 32px;
     padding-top: 8px;
     grid-template-columns: 20% 20% 10% 20% 10% 10% 5%;
-    column-gap: 10px;
+    column-gap: 16px;
+    font-size: .8rem;
 }
 
 .modal-content-grid-container label {
     margin-bottom: 0;
-    padding-left: 4px;
     padding-right: 4px;
-    margin-left: 12px;
+    margin-left: 8px;
 }
 
 .modal-content-grid-container input {
-     background-color: #0054AE;
-     margin-left: -14px;
+    background-color: #0054AE;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 4px;
+    margin-left: -14px;
 }
 
 .modal-header-grid-item h5 {
@@ -248,39 +257,42 @@ main .searchForm {
 
 
 .picker-options {
-  margin: 15px 0;
+    margin: 15px 0;
 }
 
 .picker-options .option {
-  padding: 10px;
-  font-size: medium;
-  font-weight: bold;
-  cursor: pointer;
+    padding: 10px;
+    font-size: medium;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .picker-options .option.selected {
-  border-bottom: 2px solid #0068B5;
+    border-bottom: 2px solid #0068B5;
 }
 
 
 .picker-options .option.throughput::before {
-  content: url('media/icon-throughput.svg');
+    content: url('media/icon-throughput.svg');
 }
+
 .picker-options .option.value::before {
-  content: url('media/icon-value.svg');
+    content: url('media/icon-value.svg');
 }
+
 .picker-options .option.efficiency::before {
-  content: url('media/icon-efficiency.svg');
+    content: url('media/icon-efficiency.svg');
 }
+
 .picker-options .option.latency::before {
-  content: url('media/icon-latency.svg');
+    content: url('media/icon-latency.svg');
 }
 
 .picker-options p.selected {
-  display: block;
+    display: block;
 }
 
 .picker-options p {
-  padding: 10px 0;
-  display: none;
+    padding: 10px 0;
+    display: none;
 }
