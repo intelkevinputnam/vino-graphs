@@ -338,10 +338,12 @@ $(document).ready(function () {
             console.log(networkModels);
 
             const models = networkModels.map((networkModel) => {
-                const item = $('<div>');
+                const item = $('<label class="checkmark-container">');
+                item.text(networkModel);
                 const checkbox = $('<input type="checkbox"/>');
+                const checkboxSpan = $('<span class="checkmark">');
                 item.append(checkbox);
-                item.append($('<label>' + networkModel + '</label>'));
+                item.append(checkboxSpan);
                 checkbox.attr('data-networkmodel', networkModel);
                 return item;
             });
@@ -351,10 +353,12 @@ $(document).ready(function () {
             const types = ieTypes.map((ieType) => {
                 var labelText = Graph.getIeTypeText(ieType);
                 if (labelText) {
-                    const item = $('<div>');
+                    const item = $('<label class="checkmark-container">');
+                    const checkboxSpan = $('<span class="checkmark radiobutton">');
+                    item.text(Graph.getIeTypeText(ieType));
                     const radio = $('<input type="radio" name="ietype"/>');
                     item.append(radio);
-                    item.append($('<label>' + Graph.getIeTypeText(ieType) + '</label>'));
+                    item.append(checkboxSpan);
                     radio.attr('data-ietype', ieType);
                     return item;
                 }
