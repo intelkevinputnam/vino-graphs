@@ -227,44 +227,26 @@ $(document).ready(function () {
 
     $('#build-graphs-btn').on('click', showModal);
 
-
-
-
-    // placeholder random filters
-    // function getNetworkModel() {
-    //     var arr = [
-    //         ['bert-base-cased[124]'],
-    //         ['deeplabv3-TF [513x513]'],
-    //         ['mobilenet-ssd-CF [300x300]'],
-    //         ['ssdlite_mobilenet_v2-TF [300x300]']
-    //     ];
-    //     return arr[Math.floor(Math.random() * arr.length)];
-    // }
-    // function getIeType() {
-    //     var arr = [
-    //         'atom',
-    //         'core',
-    //         'xeon'
-    //     ];
-    //     return arr[Math.floor(Math.random() * arr.length)];
-    // }
-    // function getKPI() {
-    //     var arr = [
-    //         ['throughput', 'latency', 'efficiency', 'value'],
-    //         ['throughput', 'value'],
-    //         ['throughput'],
-    //         ['throughput', 'efficiency', 'value'],
-    //         ['latency', 'efficiency', 'value'],
-    //         ['throughput', 'latency', 'efficiency'],
-    //         ['latency', 'efficiency'],
-    //         ['throughput', 'latency', 'value'],
-    //         ['throughput', 'latency'],
-    //     ];
-    //     return arr[Math.floor(Math.random() * arr.length)];
-    // }
-
     function clickBuildGraphs(graph, networkModels, ietype, platforms, kpis) {
         renderData(graph, networkModels, ietype, platforms, kpis);
+
+        $('.graph-chart-title-header').on('click', (event) => {
+            console.log(event);
+            parent = event.target.parentElement;
+
+            console.log($(parent).children('.chart-wrap.container').is(":visible"))
+
+            if ($(parent).children('.chart-wrap.container').is(":visible")) {
+                $(parent).children('.chart-wrap.container').hide();
+                $(parent).children('.chevron-right-btn').show();
+                $(parent).children('.chevron-down-btn').hide();
+                $
+            } else {
+                $(parent).children('.chart-wrap.container').show();                    
+                $(parent).children('.chevron-down-btn').show();
+                $(parent).children('.chevron-right-btn').hide();
+            }
+        });
     }
 
     function hideModal() {
@@ -317,25 +299,9 @@ $(document).ready(function () {
             modal.addClass('modal');
             // generate and configure modal content from html import
             var modalContent = $(text);
-            console.log(modalContent);
             modalContent.attr('id', 'graphModalContent');
             modalContent.addClass('modal-content');
             modal.append(modalContent);
-
-            // generate and configure network models from graph data
-            // var networkModels = Graph.getUniqueModelNames(data);
-            // var rows = networkModels.map(name => {
-            //     return $('<div><input type="checkbox"><label>' + name + '</label></div>');
-            // });
-            // $('.models-column-one').append(rows.slice(0, rows.length / 2));
-            // $('.models-column-two').append(rows.slice(rows.length / 2 + 1));
-            // generate and configure platform types from graph data
-
-            // generate and configure client platforms from graph data
-            // generate and configure parameters from graph data
-            // generate and configure precisions from graph data
-
-            console.log(networkModels);
 
             const models = networkModels.map((networkModel) => {
                 const item = $('<label class="checkmark-container">');
@@ -385,11 +351,14 @@ $(document).ready(function () {
 
             $('body').prepend(modal);
 
-            $('#modal-build-graphs-btn').on('click', () => { clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs) });
+            $('#modal-build-graphs-btn').on('click', () => { 
+                $('.configure-graphs-content').remove();
+                clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs) 
+
+            });
+
             $('.modal-close').on('click', hideModal);
             modal.find('.models-column-one input').on('click', function (event) {
-                console.log($(this).data('networkmodel'));
-                console.log(event.target.checked)
                 const selectedItem = $(this).data('networkmodel');
                 if (event.target.checked) {
                     selectedNetworkModels.push(selectedItem)
@@ -399,7 +368,6 @@ $(document).ready(function () {
                 var fPlatforms = filterClientPlatforms(graph.data, selectedNetworkModels, selectedIeType);
                 renderClientPlatforms(fPlatforms, modal);
                 selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
-                console.log(selectedNetworkModels);
             });
             modal.find('.models-column-two input').on('click', function (event) {
                 const selectedItem = $(this).data('networkmodel');
@@ -528,16 +496,18 @@ $(document).ready(function () {
             var chartName = networkModel;
             // graph title
             var chartSlug = chartName.replace(')', '').replace(' (', '-');
-            var graphContainer = $('<div>');
+            console.log(chartSlug);
             var chartContainer = $('<div>');
             // apply graph title temporary readdress
 
-            var chartContainerHeader = $('<h4>' + networkModel + '</h4>')
-            chartContainerHeader.addClass('modal-model-header');
+            var chevronDown = '<span class="chevron-down-btn"></span>';
+            var chevronRight = '<span style="display:none" class="chevron-right-btn"></span>';
+            $(chevronRight).hide();
+            var chartContainerHeader = $('<span class="graph-chart-title">' + networkModel + '</span>' + chevronDown + chevronRight);
+            chartContainerHeader.addClass('graph-chart-title-header');
             chartContainer.prepend(chartContainerHeader);
-            chartContainer.attr('id', 'ov-chart-container');
+            chartContainer.attr('id', 'ov-chart-container-' + chartSlug);
 
-            graphContainer.attr('id', 'ov-graph-container-' + chartSlug);
             chartContainer.addClass('chart-container');
             chartContainer.addClass('container');
 
@@ -551,8 +521,7 @@ $(document).ready(function () {
                 createChartWithNewData(filteredGraphData, chartContainer, kpis);
             }
 
-            $('.chart-placeholder').append(chartContainer);
-            //currentChart.append(chartContainer);
+            $('.chart-placeholder').append(chartContainer);            
         })
     };
 
@@ -582,7 +551,6 @@ $(document).ready(function () {
             config.datasets[0].data = Graph.getDatabyKPI(model, kpi);
             return config;
         });
-        console.log(graphConfigs);
 
         var graphClass = $('<div>');
         graphClass.addClass('row');
@@ -593,16 +561,16 @@ $(document).ready(function () {
 
             switch (index) {
                 case 0:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-6', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-4', showLabels);
                     break;
                 case 1:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-3', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-2', showLabels);
                     break;
                 case 2:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-3', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-2', showLabels);
                     break;
                 case 3:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-3', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-2', showLabels);
                     break;
                 default:
                     break;
@@ -624,12 +592,6 @@ $(document).ready(function () {
         container.append(chart);
         var context = canvas.get(0).getContext('2d');
         context.canvas.height = labels.length * 55 + 30;
-        if (widthClass === 'col-md-6') {
-            context.canvas.width = context.canvas.width * 1.4;
-        }
-        else if (widthClass === 'col-md-3') {
-            context.canvas.width = context.canvas.width * 0.75;
-        }
         new Chart(context, {
             type: 'horizontalBar',
             data: getChartDataNew(labels, datasets),
