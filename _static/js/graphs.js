@@ -235,6 +235,7 @@ $(document).ready(function () {
         $('.edit-settings-btn').on('click', (event) => {
             $('.configure-graphs-content').show();
             $('.edit-settings-btn').hide();
+            $('.chart-placeholder').empty();
         });
 
         $('.graph-chart-title-header').on('click', (event) => {
