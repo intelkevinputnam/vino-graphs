@@ -230,6 +230,13 @@ $(document).ready(function () {
     function clickBuildGraphs(graph, networkModels, ietype, platforms, kpis) {
         renderData(graph, networkModels, ietype, platforms, kpis);
 
+        $('.edit-settings-btn').show();
+        
+        $('.edit-settings-btn').on('click', (event) => {
+            $('.configure-graphs-content').show();
+            $('.edit-settings-btn').hide();
+        });
+
         $('.graph-chart-title-header').on('click', (event) => {
             console.log(event);
             parent = event.target.parentElement;
@@ -303,6 +310,9 @@ $(document).ready(function () {
             modalContent.addClass('modal-content');
             modal.append(modalContent);
 
+            // hide edit settings button
+            $('.edit-settings-btn').hide();
+
             const models = networkModels.map((networkModel) => {
                 const item = $('<label class="checkmark-container">');
                 item.text(networkModel);
@@ -352,7 +362,7 @@ $(document).ready(function () {
             $('body').prepend(modal);
 
             $('#modal-build-graphs-btn').on('click', () => { 
-                $('.configure-graphs-content').remove();
+                $('.configure-graphs-content').hide();
                 clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs) 
 
             });

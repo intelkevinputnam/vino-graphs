@@ -73,6 +73,20 @@ main img {
 
 .edit-settings-btn {
     float: right;
+    color: #0054AE;
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 4rem;
+    display: none;
+}
+
+.edit-settings-text {
+    vertical-align: middle;
+}
+
+.edit-settings-icon {
+    vertical-align: middle;
+    content: url('media/edit-settings.svg');
 }
 
 .modal {
