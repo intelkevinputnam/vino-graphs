@@ -316,16 +316,7 @@ $(document).ready(function () {
             // hide edit settings button
             $('.edit-settings-btn').hide();
 
-            const models = networkModels.map((networkModel) => {
-                const item = $('<label class="checkmark-container">');
-                item.text(networkModel);
-                const checkbox = $('<input type="checkbox"/>');
-                const checkboxSpan = $('<span class="checkmark">');
-                item.append(checkbox);
-                item.append(checkboxSpan);
-                checkbox.attr('data-networkmodel', networkModel);
-                return item;
-            });
+            const models = networkModels.map((networkModel) => createCheckMark(networkModel, 'networkmodel'));
             modal.find('.models-column-one').append(models.slice(0, models.length / 2));
             modal.find('.models-column-two').append(models.slice(models.length / 2));
 
@@ -347,14 +338,7 @@ $(document).ready(function () {
             //TODO: check this line
             modal.find('.ietype-column input').first().attr('checked', true);
 
-            const kpiLabels = kpis.map((kpi) => {
-                const item = $('<div>');
-                const checkbox = $('<input type="checkbox"/>');
-                item.append(checkbox);
-                item.append($('<label>' + kpi + '</label>'));
-                checkbox.attr('data-kpi', kpi);
-                return item;
-            });
+            const kpiLabels = kpis.map((kpi) => createCheckMark(kpi, 'kpi'));
             modal.find('.kpi-column').append(kpiLabels);
 
             // TODO: figure out what to do with precisions
@@ -367,7 +351,6 @@ $(document).ready(function () {
             $('#modal-build-graphs-btn').on('click', () => { 
                 $('.configure-graphs-content').hide();
                 clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs) 
-
             });
 
             $('.modal-close').on('click', hideModal);
@@ -433,16 +416,19 @@ $(document).ready(function () {
     function renderClientPlatforms(platforms, modal) {
         var platformNames = Graph.getPlatformNames(platforms);
         $('.client-platform-column').empty();
-        const clientPlatforms = platformNames.map((platform) => {
-            const item = $('<div>');
-            const checkbox = $('<input type="checkbox"/>');
-            item.append(checkbox);
-            item.append($('<label>' + platform + '</label>'));
-            checkbox.attr('data-platform', platform);
-            checkbox.attr('checked', true);
-            return item;
-        });
+        const clientPlatforms = platformNames.map((platform) => createCheckMark(platform, 'platform'));
         modal.find('.client-platform-column').append(clientPlatforms);
+    }
+
+    function createCheckMark(itemLabel, modelLabel) {
+      const item = $('<label class="checkmark-container">');
+      item.text(itemLabel);
+      const checkbox = $('<input type="checkbox"/>');
+      const checkboxSpan = $('<span class="checkmark">');
+      item.append(checkbox);
+      item.append(checkboxSpan);
+      checkbox.attr('data-' + modelLabel, itemLabel);
+      return item;
     }
 
 
