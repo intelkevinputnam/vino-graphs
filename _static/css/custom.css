@@ -193,6 +193,20 @@ main img {
     padding-left: 16px;
 }
 
+.graph-row {
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.graph-row-first-column {
+    width: 32%;
+}
+
+.graph-row-column {
+    width: 20%;
+}
+
 
 
 /* Table Sort Button */

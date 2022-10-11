@@ -452,7 +452,7 @@ $(document).ready(function () {
             maintainAspectRatio: false,
             legend: { display: true, position: 'bottom' },
             title: {
-                display: true,
+                display: false,
                 text: title
             },
             scales: {
@@ -566,7 +566,7 @@ $(document).ready(function () {
         });
 
         var graphClass = $('<div>');
-        graphClass.addClass('row');
+        graphClass.addClass('graph-row');
         chartWrap.append(graphClass);
 
         graphConfigs.forEach((graphConfig, index) => {
@@ -574,16 +574,16 @@ $(document).ready(function () {
 
             switch (index) {
                 case 0:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-4', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-first-column', showLabels);
                     break;
                 case 1:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-2', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
                     break;
                 case 2:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-2', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
                     break;
                 case 3:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'col-md-2', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
                     break;
                 default:
                     break;
@@ -591,7 +591,7 @@ $(document).ready(function () {
         });
 
         // might need this line for multiple graphs on a page
-        //var displayWidth = $(window).width();
+        // var displayWidth = $(window).width();
 
     }
 
