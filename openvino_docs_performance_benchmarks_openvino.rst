@@ -39,8 +39,8 @@ Measuring inference performance involves many variables and is extremely use-cas
     </div>
 
 
-Benchmark Graph Builder
-~~~~~~~~~~~~~~~~~~~~~~~
+Build benchmark graphs to your specifications
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. raw:: html
 

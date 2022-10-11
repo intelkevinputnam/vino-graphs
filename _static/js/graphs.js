@@ -231,10 +231,12 @@ $(document).ready(function () {
         renderData(graph, networkModels, ietype, platforms, kpis);
 
         $('.edit-settings-btn').show();
-        
+        $('.clear-all-btn').hide();
+
         $('.edit-settings-btn').on('click', (event) => {
             $('.configure-graphs-content').show();
             $('.edit-settings-btn').hide();
+            $('.clear-all-btn').show();
             $('.chart-placeholder').empty();
         });
 

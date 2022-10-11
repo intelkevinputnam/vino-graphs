@@ -71,10 +71,21 @@ main img {
     cursor: pointer;
 }
 
+.clear-all-btn {
+    float: right;
+    cursor: pointer;
+    line-height: 4rem;
+}
+
+.clear-all-btn-content {
+    border: 1.5px solid black;
+    padding: 6px 10px;
+}
+
 .edit-settings-btn {
     float: right;
     color: #0054AE;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     cursor: pointer;
     line-height: 4rem;
     display: none;
@@ -170,11 +181,8 @@ main img {
     margin: 0;
 }
 
-.modal-content-footer {
-    padding: 10px 0;
-}
-
 .modal-build-graphs-btn {
+    margin: 10px 0;
     padding: 4px 16px;
     float: right;
     background-color: #0054AE;
