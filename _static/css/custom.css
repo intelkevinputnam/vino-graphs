@@ -159,6 +159,10 @@ main img {
     font-size: .78rem;
 }
 
+.modal-content-grid-container .column {
+  min-width: 175px;
+}
+
 .modal-content-grid-container label {
     margin-bottom: 0;
     padding-right: 4px;
@@ -357,6 +361,8 @@ main .searchForm {
 .picker-options p {
     padding: 10px 0;
     display: none;
+    border-top: #888 1px solid;
+    margin-top: 7px;
 }
 
 .checkmark-container {
