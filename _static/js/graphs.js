@@ -494,7 +494,7 @@ $(document).ready(function () {
         return {
             responsive: true,
             maintainAspectRatio: false,
-            legend: { display: false, position: 'bottom' },
+            legend: { display: true, position: 'bottom' },
             title: {
                 display: false,
                 text: title
@@ -612,19 +612,20 @@ $(document).ready(function () {
         // get the kpi title's and create headers for the graphs 
         var chartColumnHeaderContainer = $('<div>');
         chartColumnHeaderContainer.addClass('chart-column-header-container');
-        var columnHeaderContainer = $('<div>');
-        columnHeaderContainer.addClass('chart-column-title')
+        chartColumnHeaderContainer.append($('<div class="chart-column-title"></div>'));
         graphConfigs.forEach((graphConfig) => {
+            var columnHeaderContainer = $('<div>');
+            columnHeaderContainer.addClass('chart-column-title');
             var columnIcon = $('<div class="icon">');
             columnIcon.addClass(graphConfig.iconClass);
-            var columnHeader = $('<div class="header>');
-            columnHeader.append(columnIcon);
+            columnHeaderContainer.append(columnIcon);
+            var columnHeader = $('<div class="chart-header">');
             columnHeader.append($('<div class="title">' + graphConfig.chartTitle + '</div>'));
             columnHeader.append($('<div class="title">' + Graph.getGraphPlatformText(ietype) + '</div>'));
             columnHeader.append($('<div class="subtitle">' + graphConfig.chartSubtitle + '</div>'));
             columnHeaderContainer.append(columnHeader);
+            chartColumnHeaderContainer.append(columnHeaderContainer);
         });
-        chartColumnHeaderContainer.append(columnHeaderContainer);
 
         console.log(graphConfigs);
 

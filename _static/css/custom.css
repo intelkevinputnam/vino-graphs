@@ -42,22 +42,30 @@ main img {
 }
 
 .chart-column-header-container {
+    display: flex;
+    flex-direction: row;
     width: 100%;
 }
 .chart-column-title {
-    width: 20%;
+    min-width: 20%;
+    flex-grow: 0 1;
 }
 .chart-column-title .icon {
-    float:left;
+    margin-top: 6px;
+    margin-right: 8px;
+    flex-grow: 0;
+    float: left;
 }
-.chart-column-title .header {
+.chart-column-title .chart-header {
+    flex-grow: 1;
     float: left;
 }
 .chart-column-title .title {
-    font-size: 2rem;
+    font-size: 1rem;
+    font-weight: 400;
 }
 .chart-column-title .subtitle {
-    font-size: .5rem;
+    font-size: .8rem;
     color: gray;
 }
 
@@ -72,7 +80,7 @@ main img {
     white-space: nowrap;
     display: block;
     font-size: .8rem;
-    line-height: 55px;
+    line-height: 50px;
     color: gray;
 }
 
@@ -100,19 +108,15 @@ main img {
 }
 
 .efficiency-icon {
-    vertical-align: middle;
     content: url('media/efficiency.svg');
 }
 .latency-icon {
-    vertical-align: middle;
     content: url('media/latency.svg');
 }
 .throughput-icon {
-    vertical-align: middle;
     content: url('media/throughput.svg');
 }
 .value-icon {
-    vertical-align: middle;
     content: url('media/value.svg');
 }
 
