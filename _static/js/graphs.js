@@ -348,6 +348,20 @@ $(document).ready(function () {
 
             $('body').prepend(modal);
 
+            $('.clear-all-btn').on('click', () => {
+
+                const a = $('.modal-content-grid-container input:checkbox');
+                $('.modal-content-grid-container input:checkbox').each((index, object) => $(object).prop('checked', false));
+                console.log('GO DOGS GO');
+                var thing = $('.models-column-one').children();
+                console.log(thing);
+                // unselectAllCheckboxes(thing);
+                selectedNetworkModels = [];
+                selectedIeType = 'atom';
+                selectedClientPlatforms = [];
+                selectedKPIs = [];
+            })
+
             $('#modal-build-graphs-btn').on('click', () => { 
                 $('.configure-graphs-content').hide();
                 clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs) 
@@ -435,20 +449,17 @@ $(document).ready(function () {
 
     // receives a jquery parent class and selects all child checkboxes
     function selectAllCheckboxes(items) {
-        console.log(items);
         items.forEach((item) => {
-            console.log(item);
             item.find(':input').attr('checked', true);
         });
-        
     }
     // receives a jquery parent class and unselects all child checkboxes
-    function unselectAllCheckboxes(item) {
-        console.log(items);
-        items.forEach((item) => {
-            console.log(item);
-            item.attr('checked', false);
-        });
+    function unselectAllCheckboxes(items) {
+        if (items) {
+            items.each((index, item) => {
+                item.attr('checked', false);
+            });
+        }
     }
 
 
