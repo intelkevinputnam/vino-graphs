@@ -41,6 +41,41 @@ main img {
     padding: 12px 0;
 }
 
+.chart-column-header-container {
+    width: 100%;
+}
+.chart-column-title {
+    width: 20%;
+}
+.chart-column-title .icon {
+    float:left;
+}
+.chart-column-title .header {
+    float: left;
+}
+.chart-column-title .title {
+    font-size: 2rem;
+}
+.chart-column-title .subtitle {
+    font-size: .5rem;
+    color: gray;
+}
+
+.chart-labels-container {
+    width: 18%;
+    height: 415px;
+}
+.chart-labels-container .title {
+    text-align: right;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    font-size: .8rem;
+    line-height: 55px;
+    color: gray;
+}
+
 .chevron-right-btn {
     content: url('media/chevron-right.svg');
     vertical-align: middle;
@@ -62,6 +97,23 @@ main img {
 
 .chart-placeholder {
     overflow-y: scroll;
+}
+
+.efficiency-icon {
+    vertical-align: middle;
+    content: url('media/efficiency.svg');
+}
+.latency-icon {
+    vertical-align: middle;
+    content: url('media/latency.svg');
+}
+.throughput-icon {
+    vertical-align: middle;
+    content: url('media/throughput.svg');
+}
+.value-icon {
+    vertical-align: middle;
+    content: url('media/value.svg');
 }
 
 /* Modal */
@@ -244,8 +296,6 @@ main img {
     color: #fefefe;
     float: right;
 }
-
-
 
 /* Table Sort Button */
 

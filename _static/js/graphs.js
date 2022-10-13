@@ -192,33 +192,67 @@ class Graph {
         }
     }
 
-    // this is the function that tells the graph software how to render
-    static getGraphConfig(kpi) {
+    // this returns an object that is used to ender the chart
+    static getGraphConfig(kpi, precisions) {
         switch (kpi) {
             case 'throughput':
                 return {
-                    chartTitle: 'Throughput (higher is better)',
-                    datasets: [{ data: null, color: '#00C7FD', label: 'FPS (INT8)' },
-                    { data: null, color: '#0068B5', label: 'FPS (FP16)' },
-                    { data: null, color: '#00C7FD', label: 'FPS (FP32)' }],
+                    chartTitle: 'Throughput',
+                    chartSubtitle: '(higher is better)',
+                    iconClass: 'throughput-icon',
+                    datasets: precisions.map((precision) => this.getPrecisionConfig(precision)),
                 };
             case 'latency':
                 return {
-                    chartTitle: 'Latency (lower is better)',
+                    chartTitle: 'Latency',
+                    chartSubtitle: '(lower is better)',
+                    iconClass: 'latency-icon',
                     datasets: [{ data: null, color: '#8F5DA2', label: 'Milliseconds' }],
                 };
             case 'value':
                 return {
-                    chartTitle: 'Value (higher is better)',
+                    chartTitle: 'Value',
+                    chartSubtitle: '(higher is better)',
+                    iconClass: 'value-icon',
                     datasets: [{ data: null, color: '#8BAE46', label: 'FPS/$ (INT8)' }],
                 };
             case 'efficiency':
                 return {
-                    chartTitle: 'Efficiency (higher is better)',
+                    chartTitle: 'Efficiency',
+                    chartSubtitle: '(higher is better)',
+                    iconClass: 'efficiency-icon',
                     datasets: [{ data: null, color: '#E96115', label: 'FPS/TDP (INT8)' }],
                 };
             default:
                 return {};
+        }
+    }
+
+    static getPrecisionConfig(precision) {
+        switch (precision) {
+            case 'int8':
+                return { data: null, color: '#00C7FD', label: 'FPS (INT8)' };
+            case 'fp16':
+                return { data: null, color: '#0068B5', label: 'FPS (FP16)' };
+            case 'fp32':
+                return { data: null, color: '#00C7FD', label: 'FPS (FP32)'};
+            default:
+                return {};
+        }
+    }
+
+    static getGraphPlatformText(platform) {
+        switch (platform) {
+            case 'atom':
+                return 'Mobile Platforms';
+            case 'core':
+                return 'Client Platforms';
+            case 'xeon':
+                return 'Server Platforms';
+            case 'accel':
+                return 'Accelerated Platforms';
+            default:
+                return '';
         }
     }
 }
@@ -228,7 +262,7 @@ $(document).ready(function () {
     $('#build-graphs-btn').on('click', showModal);
 
     function clickBuildGraphs(graph, networkModels, ietype, platforms, kpis) {
-        renderData(graph, networkModels, ietype, platforms, kpis);
+        renderData(graph, networkModels, ietype, kpis);
 
         $('.edit-settings-btn').show();
         $('.clear-all-btn').hide();
@@ -247,10 +281,7 @@ $(document).ready(function () {
         });
 
         $('.graph-chart-title-header').on('click', (event) => {
-            console.log(event);
-            parent = event.target.parentElement;
-
-            console.log($(parent).children('.chart-wrap.container').is(":visible"))
+            var parent = event.target.parentElement;
 
             if ($(parent).children('.chart-wrap.container').is(":visible")) {
                 $(parent).children('.chart-wrap.container').hide();
@@ -271,15 +302,12 @@ $(document).ready(function () {
     }
 
     function showModal() {
-
         document.body.style.overflow = 'hidden';
         if ($('#graphModal').length) {
             $('#graphModal').show();
             return;
         }
-
         const staticData = 'csv/testdatacsv.csv';
-
         Papa.parse(staticData, {
             download: true,
             complete: renderModal
@@ -455,27 +483,18 @@ $(document).ready(function () {
     }
 
 
-    // receives a jquery parent class and selects all child checkboxes
+    // receives a jquery list of items and selects all input checkboxes
     function selectAllCheckboxes(items) {
         items.forEach((item) => {
             item.find(':input').attr('checked', true);
         });
     }
-    // receives a jquery parent class and unselects all child checkboxes
-    function unselectAllCheckboxes(items) {
-        if (items) {
-            items.each((index, item) => {
-                item.attr('checked', false);
-            });
-        }
-    }
 
-
-    function getChartOptions(title, displayLabels) {
+    function getChartOptions(title) {
         return {
             responsive: true,
             maintainAspectRatio: false,
-            legend: { display: true, position: 'bottom' },
+            legend: { display: false, position: 'bottom' },
             title: {
                 display: false,
                 text: title
@@ -488,7 +507,7 @@ $(document).ready(function () {
                 }],
                 yAxes: [{
                     ticks: {
-                        display: displayLabels, //this will remove only the label
+                        display: false, //this will remove only the label
                         beginAtZero: true
                     }
                 }]
@@ -526,13 +545,12 @@ $(document).ready(function () {
         }
     }
 
-    function renderData(graph, networkModels, ietype, platforms, kpis) {
+    function renderData(graph, networkModels, ietype, kpis) {
 
         $('.chart-placeholder').empty();
         networkModels.forEach((networkModel) => {
             // graph title
             var chartName = networkModel;
-            // graph title
             var chartSlug = chartName.replace(')', '').replace(' (', '-');
             console.log(chartSlug);
             var chartContainer = $('<div>');
@@ -556,7 +574,7 @@ $(document).ready(function () {
             console.log(filteredGraphData);
 
             if (filteredGraphData.length > 0) {
-                createChartWithNewData(filteredGraphData, chartContainer, kpis);
+                createChartWithNewData(filteredGraphData, chartContainer, kpis, ietype);
             }
 
             $('.chart-placeholder').append(chartContainer);
@@ -566,7 +584,7 @@ $(document).ready(function () {
 
     // this function should take the final data set and turn it into graphs
     // params: GraphData, unused, chartContainer
-    function createChartWithNewData(model, chartContainer, kpis) {
+    function createChartWithNewData(model, chartContainer, kpis, ietype) {
         var chartWrap = $('<div>');
         chartWrap.addClass('chart-wrap');
         chartWrap.addClass('container');
@@ -579,7 +597,7 @@ $(document).ready(function () {
             var kpi = kpiii.toLowerCase();
             if (kpi === 'throughput') {
                 var throughputData = Graph.getDatabyKPI(model, kpi);
-                var config = Graph.getGraphConfig(kpi);
+                var config = Graph.getGraphConfig(kpi, []);
                 config.datasets[0].data = throughputData.map(tData => tData.int8);
                 config.datasets[1].data = throughputData.map(tData => tData.fp16);
                 //config.datasets[2].data = throughputData.map(tData => tData.fp32);
@@ -590,25 +608,59 @@ $(document).ready(function () {
             return config;
         });
 
+
+        // get the kpi title's and create headers for the graphs 
+        var chartColumnHeaderContainer = $('<div>');
+        chartColumnHeaderContainer.addClass('chart-column-header-container');
+        var columnHeaderContainer = $('<div>');
+        columnHeaderContainer.addClass('chart-column-title')
+        graphConfigs.forEach((graphConfig) => {
+            var columnIcon = $('<div class="icon">');
+            columnIcon.addClass(graphConfig.iconClass);
+            var columnHeader = $('<div class="header>');
+            columnHeader.append(columnIcon);
+            columnHeader.append($('<div class="title">' + graphConfig.chartTitle + '</div>'));
+            columnHeader.append($('<div class="title">' + Graph.getGraphPlatformText(ietype) + '</div>'));
+            columnHeader.append($('<div class="subtitle">' + graphConfig.chartSubtitle + '</div>'));
+            columnHeaderContainer.append(columnHeader);
+        });
+        chartColumnHeaderContainer.append(columnHeaderContainer);
+
+        console.log(graphConfigs);
+
+        // get the client platform labels and create labels for all the graphs
+
+        var labelsContainer = $('<div>');
+        labelsContainer.addClass('chart-labels-container');
+
+        labels.forEach((label) => {
+            labelsContainer.append($('<div class="title">' + label + '</div>'));
+        });
+
+        console.log(labels);
+
+        // get the legend and create legends for each graph
+
         var graphClass = $('<div>');
         graphClass.addClass('graph-row');
+        chartWrap.append(chartColumnHeaderContainer);
+        graphClass.append(labelsContainer);
         chartWrap.append(graphClass);
 
         graphConfigs.forEach((graphConfig, index) => {
-            var showLabels = !index ? true : false;
 
             switch (index) {
                 case 0:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-first-column', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column');
                     break;
                 case 1:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column');
                     break;
                 case 2:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column');
                     break;
                 case 3:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
+                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column');
                     break;
                 default:
                     break;
@@ -636,6 +688,5 @@ $(document).ready(function () {
             options: getChartOptions(chartTitle, displayLabels)
         });
     }
-
 
 });
