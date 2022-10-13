@@ -232,11 +232,13 @@ $(document).ready(function () {
 
         $('.edit-settings-btn').show();
         $('.clear-all-btn').hide();
-
+        $('.modal-footer').show();
+        
         $('.edit-settings-btn').on('click', (event) => {
             $('.configure-graphs-content').show();
             $('.edit-settings-btn').hide();
             $('.clear-all-btn').show();
+            $('.modal-footer').hide();
             $('.chart-placeholder').empty();
         });
 
@@ -261,10 +263,12 @@ $(document).ready(function () {
 
     function hideModal() {
         $('#graphModal').hide();
+        document.body.style.overflow = 'auto';
     }
-
+    
     function showModal() {
-
+        
+        document.body.style.overflow = 'hidden';
         if ($('#graphModal').length) {
             $('#graphModal').show();
             return;

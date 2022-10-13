@@ -53,6 +53,10 @@ main img {
     padding: 0;
 }
 
+.chart-placeholder {
+    overflow-y: scroll;
+}
+
 /* Modal */
 
 /* The Close Button */
@@ -123,8 +127,6 @@ main img {
     border: 1px solid #888;
     width: 95%;
     max-height: 90%;
-    overflow-y: scroll;
-    /* Could be more or less, depending on screen size */
 }
 
 .modal-content h2 {
@@ -186,11 +188,22 @@ main img {
 }
 
 .modal-build-graphs-btn {
-    margin: 10px 0;
+    margin-bottom: 10px;
+    margin-right: 3px;
     padding: 4px 16px;
     float: right;
+    border-color: #0054AE;
     background-color: #0054AE;
     color: #fff;
+}
+
+.modal-footer {
+    display: none;
+    border: none;
+    width: 100%;
+    position: relative;
+    bottom: -12px;
+    left: 0;
 }
 
 .benchmark-graph-results-header {
@@ -209,6 +222,20 @@ main img {
 
 .graph-row-column {
     width: 20%;
+}
+
+.export-btn {
+    padding: 4px 16px;
+    border-width: 1px;
+    float: right;
+}
+
+.close-btn {
+    padding: 4px 16px;
+    border-color: #0054AE;
+    background-color: #0054AE;
+    color: #fefefe;
+    float: right;
 }
 
 
