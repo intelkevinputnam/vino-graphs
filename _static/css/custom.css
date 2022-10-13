@@ -152,8 +152,7 @@ main img {
 
 .modal-header-grid-container {
     display: grid;
-    padding-left: 16px;
-    padding-right: 64px;
+    padding: 12px 64px 2px 16px;
     grid-template-columns: 40% 20% 20% 10% 10%;
     column-gap: 16px;
 }
