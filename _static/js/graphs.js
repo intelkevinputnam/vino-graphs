@@ -417,6 +417,7 @@ $(document).ready(function () {
         var platformNames = Graph.getPlatformNames(platforms);
         $('.client-platform-column').empty();
         const clientPlatforms = platformNames.map((platform) => createCheckMark(platform, 'platform'));
+        selectAllCheckboxes(clientPlatforms);
         modal.find('.client-platform-column').append(clientPlatforms);
     }
 
@@ -429,6 +430,25 @@ $(document).ready(function () {
       item.append(checkboxSpan);
       checkbox.attr('data-' + modelLabel, itemLabel);
       return item;
+    }
+
+
+    // receives a jquery parent class and selects all child checkboxes
+    function selectAllCheckboxes(items) {
+        console.log(items);
+        items.forEach((item) => {
+            console.log(item);
+            item.find(':input').attr('checked', true);
+        });
+        
+    }
+    // receives a jquery parent class and unselects all child checkboxes
+    function unselectAllCheckboxes(item) {
+        console.log(items);
+        items.forEach((item) => {
+            console.log(item);
+            item.attr('checked', false);
+        });
     }
 
 

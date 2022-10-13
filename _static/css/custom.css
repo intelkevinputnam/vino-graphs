@@ -160,7 +160,7 @@ main img {
 }
 
 .modal-content-grid-container .column {
-  min-width: 175px;
+  min-width: 100px;
 }
 
 .modal-content-grid-container label {
