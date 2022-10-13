@@ -385,8 +385,6 @@ $(document).ready(function () {
             $('body').prepend(modal);
 
             $('.clear-all-btn').on('click', () => {
-
-                const a = $('.modal-content-grid-container input:checkbox');
                 $('.modal-content-grid-container input:checkbox').each((index, object) => $(object).prop('checked', false));
                 console.log('GO DOGS GO');
                 var thing = $('.models-column-one').children();
@@ -434,6 +432,12 @@ $(document).ready(function () {
                 renderClientPlatforms(fPlatforms, modal);
                 selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
                 console.log(selectedIeType);
+                if (selectedIeType === 'core') {
+                    showCoreSelectorTypes();
+                }
+                else {
+                    hideCoreSelectorTypes();
+                }
             });
             modal.find('.kpi-column input').on('click', function (event) {
                 const selectedItem = $(this).data('kpi');
@@ -444,6 +448,12 @@ $(document).ready(function () {
                     selectedKPIs = selectedKPIs.filter((item) => item !== selectedItem);
                 }
                 console.log(selectedKPIs);
+                if (selectedKPIs.includes('Throughput')) {
+                    showPrecisionSelectorTypes();
+                }
+                else {
+                    hidePrecisionSelectorTypes();
+                }
             });
 
             // TODO Fix this targeting issue
@@ -453,6 +463,57 @@ $(document).ready(function () {
                 }
             }
         });
+    }
+
+    function showCoreSelectorTypes() {
+
+        if ($('.client-platform-column').find('.selectable-box-container').length) {
+            $('.client-platform-column').find('.selectable-box-container').show();
+            return;
+        }
+        var container = $('<div>');
+        container.addClass('selectable-box-container');
+        var box1 = $('<div>CPU</div>');
+        var box2 = $('<div>iGPU</div>');
+        var box3 = $('<div>CPU+iGPU</div>');
+        box1.addClass('selectable-box');
+        box2.addClass('selectable-box');
+        box3.addClass('selectable-box');
+        container.append(box1);
+        container.append(box2);
+        container.append(box3);
+
+        $('.client-platform-column').prepend(container);
+    }
+
+
+    function hideCoreSelectorTypes() {
+        $('.client-platform-column').find('.selectable-box-container').hide();
+    }
+
+    function showPrecisionSelectorTypes() {
+
+        if ($('.precisions-column').find('.selectable-box-container').length) {
+            $('.precisions-column').find('.selectable-box-container').show();
+            return;
+        }
+        var container = $('<div>');
+        container.addClass('selectable-box-container');
+        var box1 = $('<div>INT8</div>');
+        var box2 = $('<div>FP16</div>');
+        var box3 = $('<div>FP32</div>');
+        box1.addClass('selectable-box');
+        box2.addClass('selectable-box');
+        box3.addClass('selectable-box');
+        container.append(box1);
+        container.append(box2);
+        container.append(box3);
+        $('.precisions-column').prepend(container);
+    }
+
+
+    function hidePrecisionSelectorTypes() {
+        $('.precisions-column').find('.selectable-box-container').hide();
     }
 
     // TODO: matrix math or truth table testing before shipping this

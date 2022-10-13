@@ -453,6 +453,21 @@ main .searchForm {
     margin-top: 7px;
 }
 
+.selectable-box-container {
+    display: flex;
+    flex-direction: row;
+    padding: 0 0 8px 0;
+}
+
+.selectable-box {
+    border: 1px solid gray;
+    cursor: pointer;
+    flex-grow: 0;
+    font-size: .8rem;
+    font-weight: 600;
+    padding: 3px 10px;
+}
+
 .checkmark-container {
   display: block;
   position: relative;
