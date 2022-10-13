@@ -47,6 +47,7 @@ $(document).ready(function () {
     addLegalNotice();
     updateSearchForm();
     initBenchmarkPickers();
+    initCollapsibleHeaders();
     createSphinxTabSets();
 });
 
@@ -296,4 +297,23 @@ function initBenchmarkPickers() {
       }
     });
   });
+}
+
+
+function initCollapsibleHeaders() {
+  $('#accelerator-inference-engines, section[id^="cpu-inference-engine"]').on('click', function() {
+    if(!$(this).find('table').is(':visible')) {
+      resetCollapsibleHeaders();
+      $(this).find('table').show();
+      $(this).find('h2').addClass('expanded')
+      $(this).find('h2').get(0).scrollIntoView();
+    } else {
+      resetCollapsibleHeaders();
+    }
+  });
+
+  function resetCollapsibleHeaders() {
+    $('#accelerator-inference-engines, section[id^="cpu-inference-engine"]').find('h2').removeClass('expanded');
+    $('#accelerator-inference-engines table, section[id^="cpu-inference-engine"] table').hide();
+  }
 }

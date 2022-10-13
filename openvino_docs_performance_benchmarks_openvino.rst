@@ -63,205 +63,9 @@ Intel optimizations, for Intel compilers or other products, may not optimize to 
 
 Testing by Intel done on: see test date for each HW platform below.
 
-**CPU Inference Engines**
 
-.. list-table::
-    :header-rows: 1
-
-    * - Configuration
-      - Intel® Xeon® E-2124G
-      - Intel® Xeon® W1290P
-    * - Motherboard
-      - ASUS\* WS C246 PRO
-      - ASUS\* WS W480-ACE
-    * - CPU
-      - Intel® Xeon® E-2124G CPU @ 3.40GHz
-      - Intel® Xeon® W-1290P CPU @ 3.70GHz
-    * - Hyper Threading
-      - OFF
-      - ON
-    * - Turbo Setting
-      - ON
-      - ON
-    * - Memory
-      - 2 x 16 GB DDR4 2666MHz
-      - 4 x 16 GB DDR4 @ 2666MHz
-    * - Operating System
-      - Ubuntu\* 20.04.3 LTS
-      - Ubuntu\* 20.04.3 LTS
-    * - Kernel Version
-      - 5.4.0-42-generic
-      - 5.4.0-42-generic
-    * - BIOS Vendor
-      - American Megatrends Inc.\*
-      - American Megatrends Inc.
-    * - BIOS Version
-      - 1901
-      - 2301
-    * - BIOS Release
-      - September 24, 2021
-      - July 8, 2021
-    * - BIOS Settings
-      - Select optimized default settings, save & exit
-      - Select optimized default settings, save & exit
-    * - Batch size
-      - 1
-      - 1
-    * - Precision
-      - INT8
-      - INT8
-    * - Number of concurrent inference requests
-      - 4
-      - 5
-    * - Test Date
-      - March 17, 2022
-      - March 17, 2022
-    * - Rated maximum TDP/socket in Watt
-      - `71 <https://ark.intel.com/content/www/us/en/ark/products/134854/intel-xeon-e-2124g-processor-8m-cache-up-to-4-50-ghz.html#tab-blade-1-0-1>`__
-      - `125 <https://ark.intel.com/content/www/us/en/ark/products/199336/intel-xeon-w-1290p-processor-20m-cache-3-70-ghz.html>`__
-    * - CPU Price/socket on Feb 14, 2022, USD Prices may vary
-      - `213 <https://ark.intel.com/content/www/us/en/ark/products/134854/intel-xeon-e-2124g-processor-8m-cache-up-to-4-50-ghz.html>`__
-      - `539 <https://ark.intel.com/content/www/us/en/ark/products/199336/intel-xeon-w-1290p-processor-20m-cache-3-70-ghz.html>`__
-
-**CPU Inference Engines (continue)**
-
-.. list-table::
-    :header-rows: 1
-
-    * - Configuration
-      - Intel® Xeon® Silver 4216R
-      - Intel® Xeon® Silver 4316
-    * - Motherboard
-      - Intel® Server Board S2600STB
-      - Intel Corporation / WilsonCity
-    * - CPU
-      - Intel® Xeon® Silver 4216R CPU @ 2.20GHz
-      - Intel® Xeon® Silver 4316 CPU @ 2.30GHz
-    * - Hyper Threading
-      - ON
-      - ON
-    * - Turbo Setting
-      - ON
-      - ON
-    * - Memory
-      - 12 x 32 GB DDR4 2666MHz
-      - 16 x 32 GB DDR4 @ 2666MHz
-    * - Operating System
-      - Ubuntu\* 20.04.3 LTS
-      - Ubuntu\* 20.04.3 LTS
-    * - Kernel Version
-      - 5.3.0-24-generic
-      - 5.4.0-100-generic
-    * - BIOS Vendor
-      - Intel Corporation
-      - Intel Corporation
-    * - BIOS Version
-      - SE5C620.86B.02.01. 0013.121520200651
-      - WLYDCRB1.SYS.0021. P41.2109200451
-    * - BIOS Release
-      - December 15, 2020
-      - September 20, 2021
-    * - BIOS Settings
-      - Select optimized default settings, change power policy to "performance", save & exit
-      - Select optimized default settings, save & exit
-    * - Batch size
-      - 1
-      - 1
-    * - Precision
-      - INT8
-      - INT8
-    * - Number of concurrent inference requests
-      - 32
-      - 10
-    * - Test Date
-      - March 17, 2022
-      - March 17, 2022
-    * - Rated maximum TDP/socket in Watt
-      - `125 <https://ark.intel.com/content/www/us/en/ark/products/193394/intel-xeon-silver-4216-processor-22m-cache-2-10-ghz.html#tab-blade-1-0-1>`__
-      - `150 <https://ark.intel.com/content/www/us/en/ark/products/215270/intel-xeon-silver-4316-processor-30m-cache-2-30-ghz.html>`__
-    * - CPU Price/socket on June 21, 2021, USD Prices may vary
-      - `1,002 <https://ark.intel.com/content/www/us/en/ark/products/193394/intel-xeon-silver-4216-processor-22m-cache-2-10-ghz.html>`__
-      - `1083 <https://ark.intel.com/content/www/us/en/ark/products/215270/intel-xeon-silver-4316-processor-30m-cache-2-30-ghz.html>`__
-
-**CPU Inference Engines (continue)**
-
-.. list-table::
-    :header-rows: 1
-
-    * - Configuration
-      - Intel® Xeon® Gold 5218T
-      - Intel® Xeon® Platinum 8270
-      - Intel® Xeon® Platinum 8380
-    * - Motherboard
-      - Intel® Server Board S2600STB
-      - Intel® Server Board S2600STB
-      - Intel Corporation / WilsonCity
-    * - CPU
-      - Intel® Xeon® Gold 5218T CPU @ 2.10GHz
-      - Intel® Xeon® Platinum 8270 CPU @ 2.70GHz
-      - Intel® Xeon® Platinum 8380 CPU @ 2.30GHz
-    * - Hyper Threading
-      - ON
-      - ON
-      - ON
-    * - Turbo Setting
-      - ON
-      - ON
-      - ON
-    * - Memory
-      - 12 x 32 GB DDR4 2666MHz
-      - 12 x 32 GB DDR4 2933MHz
-      - 16 x 16 GB DDR4 3200MHz
-    * - Operating System
-      - Ubuntu\* 20.04.3 LTS
-      - Ubuntu\* 20.04.3 LTS
-      - Ubuntu\* 20.04.1 LTS
-    * - Kernel Version
-      - 5.3.0-24-generic
-      - 5.3.0-24-generic
-      - 5.4.0-64-generic
-    * - BIOS Vendor
-      - Intel Corporation
-      - Intel Corporation
-      - Intel Corporation
-    * - BIOS Version
-      - SE5C620.86B.02.01. 0013.121520200651
-      - SE5C620.86B.02.01. 0013.121520200651
-      - WLYDCRB1.SYS.0020. P86.2103050636
-    * - BIOS Release
-      - December 15, 2020
-      - December 15, 2020
-      - March 5, 2021
-    * - BIOS Settings
-      - Select optimized default settings, change power policy to "performance", save & exit
-      - Select optimized default settings, change power policy to "performance", save & exit
-      - Select optimized default settings, change power policy to "performance", save & exit
-    * - Batch size
-      - 1
-      - 1
-      - 1
-    * - Precision
-      - INT8
-      - INT8
-      - INT8
-    * - Number of concurrent inference requests
-      - 32
-      - 52
-      - 80
-    * - Test Date
-      - March 17, 2022
-      - March 17, 2022
-      - March 17, 2022
-    * - Rated maximum TDP/socket in Watt
-      - `105 <https://ark.intel.com/content/www/us/en/ark/products/193953/intel-xeon-gold-5218t-processor-22m-cache-2-10-ghz.html#tab-blade-1-0-1>`__
-      - `205 <https://ark.intel.com/content/www/us/en/ark/products/192482/intel-xeon-platinum-8270-processor-35-75m-cache-2-70-ghz.html#tab-blade-1-0-1>`__
-      - `270 <https://mark.intel.com/content/www/us/en/secure/mark/products/212287/intel-xeon-platinum-8380-processor-60m-cache-2-30-ghz.html#tab-blade-1-0-1>`__
-    * - CPU Price/socket on Feb 14, 2022, USD Prices may vary
-      - `1,349 <https://ark.intel.com/content/www/us/en/ark/products/193953/intel-xeon-gold-5218t-processor-22m-cache-2-10-ghz.html>`__
-      - `7,405 <https://ark.intel.com/content/www/us/en/ark/products/192482/intel-xeon-platinum-8270-processor-35-75m-cache-2-70-ghz.html>`__
-      - `8,099 <https://mark.intel.com/content/www/us/en/secure/mark/products/212287/intel-xeon-platinum-8380-processor-60m-cache-2-30-ghz.html#tab-blade-1-0-0>`__
-
-**CPU Inference Engines (continue)**
+CPU Inference Engines - Client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
     :header-rows: 1
@@ -339,7 +143,6 @@ Testing by Intel done on: see test date for each HW platform below.
       - `444 <https://ark.intel.com/content/www/us/en/ark/products/203901/intel-core-i910900te-processor-20m-cache-up-to-4-60-ghz.html>`__
       - `519 <https://ark.intel.com/content/www/us/en/ark/products/134597/intel-core-i912900-processor-30m-cache-up-to-5-10-ghz.html>`__
 
-**CPU Inference Engines (continue)**
 
 .. list-table::
     :header-rows: 1
@@ -399,7 +202,6 @@ Testing by Intel done on: see test date for each HW platform below.
       - `303 <https://ark.intel.com/content/www/us/en/ark/products/129948/intel-core-i7-8700t-processor-12m-cache-up-to-4-00-ghz.html>`__
       - `426 <https://ark.intel.com/content/www/us/en/ark/products/208664/intel-core-i7-1185g7-processor-12m-cache-up-to-4-80-ghz-with-ipu.html>`__
 
-**CPU Inference Engines (continue)**
 
 .. list-table::
     :header-rows: 1
@@ -477,7 +279,207 @@ Testing by Intel done on: see test date for each HW platform below.
       - `192 <https://ark.intel.com/content/www/us/en/ark/products/129939/intel-core-i5-8500-processor-9m-cache-up-to-4-10-ghz.html>`__
       - `195 <https://ark.intel.com/content/www/us/en/ark/products/203891/intel-core-i5-10500te-processor-12m-cache-up-to-3-70-ghz.html>`__
 
-**CPU Inference Engines (continue)**
+
+CPU Inference Engines - Server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :header-rows: 1
+
+    * - Configuration
+      - Intel® Xeon® E-2124G
+      - Intel® Xeon® W1290P
+    * - Motherboard
+      - ASUS\* WS C246 PRO
+      - ASUS\* WS W480-ACE
+    * - CPU
+      - Intel® Xeon® E-2124G CPU @ 3.40GHz
+      - Intel® Xeon® W-1290P CPU @ 3.70GHz
+    * - Hyper Threading
+      - OFF
+      - ON
+    * - Turbo Setting
+      - ON
+      - ON
+    * - Memory
+      - 2 x 16 GB DDR4 2666MHz
+      - 4 x 16 GB DDR4 @ 2666MHz
+    * - Operating System
+      - Ubuntu\* 20.04.3 LTS
+      - Ubuntu\* 20.04.3 LTS
+    * - Kernel Version
+      - 5.4.0-42-generic
+      - 5.4.0-42-generic
+    * - BIOS Vendor
+      - American Megatrends Inc.\*
+      - American Megatrends Inc.
+    * - BIOS Version
+      - 1901
+      - 2301
+    * - BIOS Release
+      - September 24, 2021
+      - July 8, 2021
+    * - BIOS Settings
+      - Select optimized default settings, save & exit
+      - Select optimized default settings, save & exit
+    * - Batch size
+      - 1
+      - 1
+    * - Precision
+      - INT8
+      - INT8
+    * - Number of concurrent inference requests
+      - 4
+      - 5
+    * - Test Date
+      - March 17, 2022
+      - March 17, 2022
+    * - Rated maximum TDP/socket in Watt
+      - `71 <https://ark.intel.com/content/www/us/en/ark/products/134854/intel-xeon-e-2124g-processor-8m-cache-up-to-4-50-ghz.html#tab-blade-1-0-1>`__
+      - `125 <https://ark.intel.com/content/www/us/en/ark/products/199336/intel-xeon-w-1290p-processor-20m-cache-3-70-ghz.html>`__
+    * - CPU Price/socket on Feb 14, 2022, USD Prices may vary
+      - `213 <https://ark.intel.com/content/www/us/en/ark/products/134854/intel-xeon-e-2124g-processor-8m-cache-up-to-4-50-ghz.html>`__
+      - `539 <https://ark.intel.com/content/www/us/en/ark/products/199336/intel-xeon-w-1290p-processor-20m-cache-3-70-ghz.html>`__
+
+
+.. list-table::
+    :header-rows: 1
+
+    * - Configuration
+      - Intel® Xeon® Silver 4216R
+      - Intel® Xeon® Silver 4316
+    * - Motherboard
+      - Intel® Server Board S2600STB
+      - Intel Corporation / WilsonCity
+    * - CPU
+      - Intel® Xeon® Silver 4216R CPU @ 2.20GHz
+      - Intel® Xeon® Silver 4316 CPU @ 2.30GHz
+    * - Hyper Threading
+      - ON
+      - ON
+    * - Turbo Setting
+      - ON
+      - ON
+    * - Memory
+      - 12 x 32 GB DDR4 2666MHz
+      - 16 x 32 GB DDR4 @ 2666MHz
+    * - Operating System
+      - Ubuntu\* 20.04.3 LTS
+      - Ubuntu\* 20.04.3 LTS
+    * - Kernel Version
+      - 5.3.0-24-generic
+      - 5.4.0-100-generic
+    * - BIOS Vendor
+      - Intel Corporation
+      - Intel Corporation
+    * - BIOS Version
+      - SE5C620.86B.02.01. 0013.121520200651
+      - WLYDCRB1.SYS.0021. P41.2109200451
+    * - BIOS Release
+      - December 15, 2020
+      - September 20, 2021
+    * - BIOS Settings
+      - Select optimized default settings, change power policy to "performance", save & exit
+      - Select optimized default settings, save & exit
+    * - Batch size
+      - 1
+      - 1
+    * - Precision
+      - INT8
+      - INT8
+    * - Number of concurrent inference requests
+      - 32
+      - 10
+    * - Test Date
+      - March 17, 2022
+      - March 17, 2022
+    * - Rated maximum TDP/socket in Watt
+      - `125 <https://ark.intel.com/content/www/us/en/ark/products/193394/intel-xeon-silver-4216-processor-22m-cache-2-10-ghz.html#tab-blade-1-0-1>`__
+      - `150 <https://ark.intel.com/content/www/us/en/ark/products/215270/intel-xeon-silver-4316-processor-30m-cache-2-30-ghz.html>`__
+    * - CPU Price/socket on June 21, 2021, USD Prices may vary
+      - `1,002 <https://ark.intel.com/content/www/us/en/ark/products/193394/intel-xeon-silver-4216-processor-22m-cache-2-10-ghz.html>`__
+      - `1083 <https://ark.intel.com/content/www/us/en/ark/products/215270/intel-xeon-silver-4316-processor-30m-cache-2-30-ghz.html>`__
+
+
+.. list-table::
+    :header-rows: 1
+
+    * - Configuration
+      - Intel® Xeon® Gold 5218T
+      - Intel® Xeon® Platinum 8270
+      - Intel® Xeon® Platinum 8380
+    * - Motherboard
+      - Intel® Server Board S2600STB
+      - Intel® Server Board S2600STB
+      - Intel Corporation / WilsonCity
+    * - CPU
+      - Intel® Xeon® Gold 5218T CPU @ 2.10GHz
+      - Intel® Xeon® Platinum 8270 CPU @ 2.70GHz
+      - Intel® Xeon® Platinum 8380 CPU @ 2.30GHz
+    * - Hyper Threading
+      - ON
+      - ON
+      - ON
+    * - Turbo Setting
+      - ON
+      - ON
+      - ON
+    * - Memory
+      - 12 x 32 GB DDR4 2666MHz
+      - 12 x 32 GB DDR4 2933MHz
+      - 16 x 16 GB DDR4 3200MHz
+    * - Operating System
+      - Ubuntu\* 20.04.3 LTS
+      - Ubuntu\* 20.04.3 LTS
+      - Ubuntu\* 20.04.1 LTS
+    * - Kernel Version
+      - 5.3.0-24-generic
+      - 5.3.0-24-generic
+      - 5.4.0-64-generic
+    * - BIOS Vendor
+      - Intel Corporation
+      - Intel Corporation
+      - Intel Corporation
+    * - BIOS Version
+      - SE5C620.86B.02.01. 0013.121520200651
+      - SE5C620.86B.02.01. 0013.121520200651
+      - WLYDCRB1.SYS.0020. P86.2103050636
+    * - BIOS Release
+      - December 15, 2020
+      - December 15, 2020
+      - March 5, 2021
+    * - BIOS Settings
+      - Select optimized default settings, change power policy to "performance", save & exit
+      - Select optimized default settings, change power policy to "performance", save & exit
+      - Select optimized default settings, change power policy to "performance", save & exit
+    * - Batch size
+      - 1
+      - 1
+      - 1
+    * - Precision
+      - INT8
+      - INT8
+      - INT8
+    * - Number of concurrent inference requests
+      - 32
+      - 52
+      - 80
+    * - Test Date
+      - March 17, 2022
+      - March 17, 2022
+      - March 17, 2022
+    * - Rated maximum TDP/socket in Watt
+      - `105 <https://ark.intel.com/content/www/us/en/ark/products/193953/intel-xeon-gold-5218t-processor-22m-cache-2-10-ghz.html#tab-blade-1-0-1>`__
+      - `205 <https://ark.intel.com/content/www/us/en/ark/products/192482/intel-xeon-platinum-8270-processor-35-75m-cache-2-70-ghz.html#tab-blade-1-0-1>`__
+      - `270 <https://mark.intel.com/content/www/us/en/secure/mark/products/212287/intel-xeon-platinum-8380-processor-60m-cache-2-30-ghz.html#tab-blade-1-0-1>`__
+    * - CPU Price/socket on Feb 14, 2022, USD Prices may vary
+      - `1,349 <https://ark.intel.com/content/www/us/en/ark/products/193953/intel-xeon-gold-5218t-processor-22m-cache-2-10-ghz.html>`__
+      - `7,405 <https://ark.intel.com/content/www/us/en/ark/products/192482/intel-xeon-platinum-8270-processor-35-75m-cache-2-70-ghz.html>`__
+      - `8,099 <https://mark.intel.com/content/www/us/en/secure/mark/products/212287/intel-xeon-platinum-8380-processor-60m-cache-2-30-ghz.html#tab-blade-1-0-0>`__
+
+
+CPU Inference Engines - Mobile
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
     :header-rows: 1
@@ -555,7 +557,9 @@ Testing by Intel done on: see test date for each HW platform below.
       - `59 <https://ark.intel.com/content/www/us/en/ark/products/207899/intel-atom-x6425re-processor-1-5m-cache-1-90-ghz.html>`__
       - `107 <https://ark.intel.com/content/www/us/en/ark/products/208072/intel-celeron-6305e-processor-4m-cache-1-80-ghz.html>`__
 
-**Accelerator Inference Engines**
+
+Accelerator Inference Engines
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
     :header-rows: 1
