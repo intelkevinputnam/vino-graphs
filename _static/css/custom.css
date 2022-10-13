@@ -13,6 +13,13 @@ main img {
 .configure-graphs-header {
     padding-left: 16px;
 }
+.configure-graphs-header h3 {
+    float: left;
+}
+
+.header-inactive {
+    color: lightgray;
+}
 
 .configure-graphs-btn {
     padding: 4px 20px;
@@ -199,10 +206,11 @@ main img {
 
 .modal-footer {
     display: none;
+    padding: 0;
     border: none;
     width: 100%;
     position: relative;
-    bottom: -12px;
+    bottom: -16px;
     left: 0;
 }
 

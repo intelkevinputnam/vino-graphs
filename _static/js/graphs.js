@@ -233,12 +233,16 @@ $(document).ready(function () {
         $('.edit-settings-btn').show();
         $('.clear-all-btn').hide();
         $('.modal-footer').show();
-        
+        $('.configure-graphs-header h3').addClass('header-inactive');
+        $('.benchmark-graph-results-header h3').removeClass('header-inactive');
+
         $('.edit-settings-btn').on('click', (event) => {
             $('.configure-graphs-content').show();
             $('.edit-settings-btn').hide();
             $('.clear-all-btn').show();
             $('.modal-footer').hide();
+            $('.configure-graphs-header h3').removeClass('header-inactive');
+            $('.benchmark-graph-results-header h3').addClass('header-inactive');
             $('.chart-placeholder').empty();
         });
 
@@ -254,7 +258,7 @@ $(document).ready(function () {
                 $(parent).children('.chevron-down-btn').hide();
                 $
             } else {
-                $(parent).children('.chart-wrap.container').show();                    
+                $(parent).children('.chart-wrap.container').show();
                 $(parent).children('.chevron-down-btn').show();
                 $(parent).children('.chevron-right-btn').hide();
             }
@@ -265,9 +269,9 @@ $(document).ready(function () {
         $('#graphModal').hide();
         document.body.style.overflow = 'auto';
     }
-    
+
     function showModal() {
-        
+
         document.body.style.overflow = 'hidden';
         if ($('#graphModal').length) {
             $('#graphModal').show();
@@ -366,9 +370,9 @@ $(document).ready(function () {
                 selectedKPIs = [];
             })
 
-            $('#modal-build-graphs-btn').on('click', () => { 
+            $('#modal-build-graphs-btn').on('click', () => {
                 $('.configure-graphs-content').hide();
-                clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs) 
+                clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs)
             });
 
             $('.modal-close').on('click', hideModal);
@@ -440,14 +444,14 @@ $(document).ready(function () {
     }
 
     function createCheckMark(itemLabel, modelLabel) {
-      const item = $('<label class="checkmark-container">');
-      item.text(itemLabel);
-      const checkbox = $('<input type="checkbox"/>');
-      const checkboxSpan = $('<span class="checkmark">');
-      item.append(checkbox);
-      item.append(checkboxSpan);
-      checkbox.attr('data-' + modelLabel, itemLabel);
-      return item;
+        const item = $('<label class="checkmark-container">');
+        item.text(itemLabel);
+        const checkbox = $('<input type="checkbox"/>');
+        const checkboxSpan = $('<span class="checkmark">');
+        item.append(checkbox);
+        item.append(checkboxSpan);
+        checkbox.attr('data-' + modelLabel, itemLabel);
+        return item;
     }
 
 
@@ -555,7 +559,7 @@ $(document).ready(function () {
                 createChartWithNewData(filteredGraphData, chartContainer, kpis);
             }
 
-            $('.chart-placeholder').append(chartContainer);            
+            $('.chart-placeholder').append(chartContainer);
         })
     };
 
