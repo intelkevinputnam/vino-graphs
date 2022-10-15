@@ -11,6 +11,11 @@ class Filter {
         return graphDataArr.filter((data) => data.ieType.includes(value));
     }
 
+    // param: GraphData[], ieType
+    static FilterByClientPlatforms(graphDataArr, platformsArr) {
+        return graphDataArr.filter((data) => platformsArr.includes(data.platformName));
+    }
+
     // param: GraphData[] (of one networkModel), key (throughput, latency, efficiency, value)
     static getKpiData(graphDataArr, key) {
         return graphDataArr.map((data) => {
@@ -167,7 +172,7 @@ class Graph {
     }
     // TODO: this is naive, will need to do an actual filter here potentially
     static getPrecisions(graphDataArr) {
-        return ['int8', 'fp16', 'fp32'];
+        return ['INT8', 'FP16', 'FP32'];
     }
 
     // param: GraphData[]
@@ -179,7 +184,6 @@ class Graph {
     static getDatabyKPI(graphDataArr, kpi) {
         switch (kpi) {
             case 'throughput':
-                // returning int8 for now but should scale to select n <= 3 of 3
                 return graphDataArr.map((data) => data.kpi.throughput);
             case 'latency':
                 return graphDataArr.map((data) => data.kpi.latency);
@@ -261,8 +265,8 @@ $(document).ready(function () {
 
     $('#build-graphs-btn').on('click', showModal);
 
-    function clickBuildGraphs(graph, networkModels, ietype, platforms, kpis) {
-        renderData(graph, networkModels, ietype, kpis);
+    function clickBuildGraphs(graph, networkModels, ietype, platforms, kpis, precisions) {
+        renderData(graph, networkModels, ietype, platforms, kpis, precisions);
 
         $('.edit-settings-btn').show();
         $('.clear-all-btn').hide();
@@ -331,6 +335,7 @@ $(document).ready(function () {
         var selectedIeType = 'atom';
         var selectedClientPlatforms = [];
         var selectedKPIs = [];
+        var selectedPrecisions = [];
 
 
         console.log(platforms);
@@ -386,10 +391,6 @@ $(document).ready(function () {
 
             $('.clear-all-btn').on('click', () => {
                 $('.modal-content-grid-container input:checkbox').each((index, object) => $(object).prop('checked', false));
-                console.log('GO DOGS GO');
-                var thing = $('.models-column-one').children();
-                console.log(thing);
-                // unselectAllCheckboxes(thing);
                 selectedNetworkModels = [];
                 selectedIeType = 'atom';
                 selectedClientPlatforms = [];
@@ -398,10 +399,12 @@ $(document).ready(function () {
 
             $('#modal-build-graphs-btn').on('click', () => {
                 $('.configure-graphs-content').hide();
-                clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs)
+                clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs, selectedPrecisions)
             });
 
             $('.modal-close').on('click', hideModal);
+            $('.close-btn').on('click', hideModal);
+
             modal.find('.models-column-one input').on('click', function (event) {
                 const selectedItem = $(this).data('networkmodel');
                 if (event.target.checked) {
@@ -431,12 +434,19 @@ $(document).ready(function () {
                 var fPlatforms = filterClientPlatforms(graph.data, selectedNetworkModels, selectedIeType);
                 renderClientPlatforms(fPlatforms, modal);
                 selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
-                console.log(selectedIeType);
                 if (selectedIeType === 'core') {
                     showCoreSelectorTypes();
                 }
                 else {
                     hideCoreSelectorTypes();
+                }
+            });
+            modal.find('.client-platform-column input').on('click', function (event) {
+                const selectedItem = $(this).data('platform');
+                if (event.target.checked) {
+                    selectedClientPlatforms.push(selectedItem)
+                } else {
+                    selectedClientPlatforms = selectedClientPlatforms.filter((item) => item !== selectedItem);
                 }
             });
             modal.find('.kpi-column input').on('click', function (event) {
@@ -447,7 +457,6 @@ $(document).ready(function () {
                 } else {
                     selectedKPIs = selectedKPIs.filter((item) => item !== selectedItem);
                 }
-                console.log(selectedKPIs);
                 if (selectedKPIs.includes('Throughput')) {
                     showPrecisionSelectorTypes();
                 }
@@ -486,7 +495,6 @@ $(document).ready(function () {
         $('.client-platform-column').prepend(container);
     }
 
-
     function hideCoreSelectorTypes() {
         $('.client-platform-column').find('.selectable-box-container').hide();
     }
@@ -521,7 +529,6 @@ $(document).ready(function () {
         var first = Filter.FilterByNetworkModel(data, networkModels[0]);
         var second = Filter.FilterByIeType(first, ietype);
         return second;
-
     }
 
     function renderClientPlatforms(platforms, modal) {
@@ -542,7 +549,6 @@ $(document).ready(function () {
         checkbox.attr('data-' + modelLabel, itemLabel);
         return item;
     }
-
 
     // receives a jquery list of items and selects all input checkboxes
     function selectAllCheckboxes(items) {
@@ -606,7 +612,7 @@ $(document).ready(function () {
         }
     }
 
-    function renderData(graph, networkModels, ietype, kpis) {
+    function renderData(graph, networkModels, ietype, platforms, kpis, precisions) {
 
         $('.chart-placeholder').empty();
         networkModels.forEach((networkModel) => {
@@ -630,12 +636,12 @@ $(document).ready(function () {
 
             // Array of Arrays
             var filteredNetworkModels = Filter.FilterByNetworkModel(graph.data, networkModel);
-            console.log(filteredNetworkModels);
-            var filteredGraphData = Filter.FilterByIeType(filteredNetworkModels, ietype);
+            var filteredIeTypes = Filter.FilterByIeType(filteredNetworkModels, ietype);
+            var filteredGraphData = Filter.FilterByClientPlatforms(filteredIeTypes, platforms);
             console.log(filteredGraphData);
 
             if (filteredGraphData.length > 0) {
-                createChartWithNewData(filteredGraphData, chartContainer, kpis, ietype);
+                createChartWithNewData(filteredGraphData, chartContainer, kpis, ietype, precisions);
             }
 
             $('.chart-placeholder').append(chartContainer);
@@ -645,7 +651,7 @@ $(document).ready(function () {
 
     // this function should take the final data set and turn it into graphs
     // params: GraphData, unused, chartContainer
-    function createChartWithNewData(model, chartContainer, kpis, ietype) {
+    function createChartWithNewData(model, chartContainer, kpis, ietype, precisions) {
         var chartWrap = $('<div>');
         chartWrap.addClass('chart-wrap');
         chartWrap.addClass('container');
@@ -654,14 +660,15 @@ $(document).ready(function () {
         console.log('LABELS');
         console.log(model);
 
-        var graphConfigs = kpis.map((kpiii) => {
-            var kpi = kpiii.toLowerCase();
+        var graphConfigs = kpis.map((str) => {
+            var kpi = str.toLowerCase();
             if (kpi === 'throughput') {
+                var selectedPrecisions = ['int8', 'fp16', 'fp32'];
                 var throughputData = Graph.getDatabyKPI(model, kpi);
-                var config = Graph.getGraphConfig(kpi, []);
-                config.datasets[0].data = throughputData.map(tData => tData.int8);
-                config.datasets[1].data = throughputData.map(tData => tData.fp16);
-                //config.datasets[2].data = throughputData.map(tData => tData.fp32);
+                var config = Graph.getGraphConfig(kpi, precisions);
+                precisions.forEach((prec, index) => {
+                    config.datasets[index].data = throughputData.map(tData => tData[prec]);
+                });
                 return config;
             }
             var config = Graph.getGraphConfig(kpi);
