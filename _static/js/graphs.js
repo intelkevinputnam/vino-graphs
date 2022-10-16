@@ -167,6 +167,9 @@ class Graph {
     static getPlatforms(graphDataArr) {
         return Array.from(new Set(graphDataArr.map((obj) => obj.platformName)));
     }
+    static getCoreTypes(graphDataArr) {
+        return ['CPU', 'iGPU', 'CPU+iGPU'];
+    }
     static getKpis(graphDataArr) {
         return ['Throughput', 'Value', 'Efficiency', 'Latency'];
     }
@@ -327,6 +330,7 @@ $(document).ready(function () {
         var networkModels = Graph.getNetworkModels(graph.data);
         var ieTypes = Graph.getIeTypes(graph.data);
         var platforms = Graph.getPlatforms(graph.data);
+        var coreTypes = Graph.getCoreTypes(graph.data);
         var kpis = Graph.getKpis(graph.data);
         var precisions = Graph.getPrecisions(graph.data);
 
@@ -395,6 +399,7 @@ $(document).ready(function () {
                 selectedIeType = 'atom';
                 selectedClientPlatforms = [];
                 selectedKPIs = [];
+                selectedPrecisions = [];
             })
 
             $('#modal-build-graphs-btn').on('click', () => {
@@ -435,7 +440,7 @@ $(document).ready(function () {
                 renderClientPlatforms(fPlatforms, modal);
                 selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
                 if (selectedIeType === 'core') {
-                    showCoreSelectorTypes();
+                    showCoreSelectorTypes(coreTypes);
                 }
                 else {
                     hideCoreSelectorTypes();
@@ -458,7 +463,7 @@ $(document).ready(function () {
                     selectedKPIs = selectedKPIs.filter((item) => item !== selectedItem);
                 }
                 if (selectedKPIs.includes('Throughput')) {
-                    showPrecisionSelectorTypes();
+                    showPrecisionSelectorTypes(precisions);
                 }
                 else {
                     hidePrecisionSelectorTypes();
@@ -474,32 +479,34 @@ $(document).ready(function () {
         });
     }
 
-    function showCoreSelectorTypes() {
-
+    function showCoreSelectorTypes(coreTypes) {
         if ($('.client-platform-column').find('.selectable-box-container').length) {
             $('.client-platform-column').find('.selectable-box-container').show();
             return;
         }
         var container = $('<div>');
         container.addClass('selectable-box-container');
-        var box1 = $('<div>CPU</div>');
-        var box2 = $('<div>iGPU</div>');
-        var box3 = $('<div>CPU+iGPU</div>');
-        box1.addClass('selectable-box');
-        box2.addClass('selectable-box');
-        box3.addClass('selectable-box');
-        container.append(box1);
-        container.append(box2);
-        container.append(box3);
-
+        coreTypes.forEach((type) => {
+            var box = $('<div>' + type + '</div>');
+            box.attr('data-coretype', type);
+            box.addClass('selectable-box');
+            container.append(box);
+        });
         $('.client-platform-column').prepend(container);
+        $('.client-platform-column .selectable-box').on('click', function() {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+        });
     }
 
     function hideCoreSelectorTypes() {
         $('.client-platform-column').find('.selectable-box-container').hide();
     }
 
-    function showPrecisionSelectorTypes() {
+    function showPrecisionSelectorTypes(precisions) {
 
         if ($('.precisions-column').find('.selectable-box-container').length) {
             $('.precisions-column').find('.selectable-box-container').show();
@@ -507,18 +514,22 @@ $(document).ready(function () {
         }
         var container = $('<div>');
         container.addClass('selectable-box-container');
-        var box1 = $('<div>INT8</div>');
-        var box2 = $('<div>FP16</div>');
-        var box3 = $('<div>FP32</div>');
-        box1.addClass('selectable-box');
-        box2.addClass('selectable-box');
-        box3.addClass('selectable-box');
-        container.append(box1);
-        container.append(box2);
-        container.append(box3);
-        $('.precisions-column').prepend(container);
-    }
+        precisions.forEach((prec) => {
+            var box = $('<div>' + prec + '</div>');
+            box.attr('data-precision', prec);
+            box.addClass('selectable-box');
+            container.append(box);
 
+        });
+        $('.precisions-column').prepend(container);
+        $('.precisions-column .selectable-box').on('click', function() {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+        });
+    }
 
     function hidePrecisionSelectorTypes() {
         $('.precisions-column').find('.selectable-box-container').hide();
@@ -638,6 +649,7 @@ $(document).ready(function () {
             var filteredNetworkModels = Filter.FilterByNetworkModel(graph.data, networkModel);
             var filteredIeTypes = Filter.FilterByIeType(filteredNetworkModels, ietype);
             var filteredGraphData = Filter.FilterByClientPlatforms(filteredIeTypes, platforms);
+            console.log(platforms);
             console.log(filteredGraphData);
 
             if (filteredGraphData.length > 0) {
@@ -663,7 +675,6 @@ $(document).ready(function () {
         var graphConfigs = kpis.map((str) => {
             var kpi = str.toLowerCase();
             if (kpi === 'throughput') {
-                var selectedPrecisions = ['int8', 'fp16', 'fp32'];
                 var throughputData = Graph.getDatabyKPI(model, kpi);
                 var config = Graph.getGraphConfig(kpi, precisions);
                 precisions.forEach((prec, index) => {
