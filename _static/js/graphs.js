@@ -11,9 +11,17 @@ class Filter {
         return graphDataArr.filter((data) => data.ieType.includes(value));
     }
 
-    // param: GraphData[], ieType
+    // param: GraphData[], clientPlatforms[]
     static FilterByClientPlatforms(graphDataArr, platformsArr) {
         return graphDataArr.filter((data) => platformsArr.includes(data.platformName));
+    }
+
+    // param: GraphData[], ieType[]
+    static FilterByCoreTypes(graphDataArr, coreTypes) {
+        if (coreTypes) {
+            return graphDataArr.filter((data) => coreTypes.includes(data.ieType));
+        }
+        return graphDataArr;
     }
 
     // param: GraphData[] (of one networkModel), key (throughput, latency, efficiency, value)
@@ -136,13 +144,8 @@ class Precision {
     fp32 = '';
 }
 
-class Graph {
-    constructor(data) {
-        this.data = data;
-    }
-    data = new GraphData();
-
-    static getIeTypeText(ietype) {
+class Modal {
+    static getIeTypeLabel(ietype) {
         switch (ietype) {
             case 'core':
                 return 'Client Platforms (Intel® Core™)';
@@ -156,6 +159,48 @@ class Graph {
                 return '';
         }
     }
+    static getCoreTypesLabels() {
+        return ['CPU', 'iGPU', 'CPU+iGPU'];
+    }
+    static getKpisLabels() {
+        return ['Throughput', 'Value', 'Efficiency', 'Latency'];
+    }
+    static getPrecisionsLabels() {
+        return ['INT8', 'FP16', 'FP32'];
+    }
+    static getCoreTypes(labels) {
+        return labels.map((label) => {
+            switch (label) {
+                case 'CPU':
+                    return 'core';
+                case 'iGPU':
+                    return 'core-iGPU';
+                case 'CPU+iGPU':
+                    return 'core-CPU+iGPU';
+                default:
+                    return '';
+            }
+        });
+    }
+    static getPrecision(label) {
+        switch (label) {
+            case 'INT8':
+                return 'int8';
+            case 'FP16':
+                return 'fp16';
+            case 'FP32':
+                return 'fp32';
+            default:
+                return '';
+        }
+    }
+}
+
+class Graph {
+    constructor(data) {
+        this.data = data;
+    }
+    data = new GraphData();
 
     // functions to get unique keys 
     static getNetworkModels(graphDataArr) {
@@ -168,14 +213,16 @@ class Graph {
         return Array.from(new Set(graphDataArr.map((obj) => obj.platformName)));
     }
     static getCoreTypes(graphDataArr) {
-        return ['CPU', 'iGPU', 'CPU+iGPU'];
+        return Array.from(new Set(graphDataArr.map((obj) => obj.ieType)));
     }
     static getKpis(graphDataArr) {
-        return ['Throughput', 'Value', 'Efficiency', 'Latency'];
+        // TODO: test this line to make sure it's actually returning the right values in the set
+        return Array.from(new Set(graphDataArr.map((obj) => Object.keys(obj.kpi))));
     }
-    // TODO: this is naive, will need to do an actual filter here potentially
+
     static getPrecisions(graphDataArr) {
-        return ['INT8', 'FP16', 'FP32'];
+        // TODO: test this line to make sure it's actually returning the right values in the set
+        return Array.from(new Set(graphDataArr.map((obj) => Object.keys(obj.kpi.throughput))));
     }
 
     // param: GraphData[]
@@ -242,7 +289,7 @@ class Graph {
             case 'fp16':
                 return { data: null, color: '#0068B5', label: 'FPS (FP16)' };
             case 'fp32':
-                return { data: null, color: '#00C7FD', label: 'FPS (FP32)'};
+                return { data: null, color: '#00C7FD', label: 'FPS (FP32)' };
             default:
                 return {};
         }
@@ -323,33 +370,33 @@ $(document).ready(function () {
 
 
     function getSelectedNetworkModels() {
-        return $('.models-column-one input:checked, .models-column-two input:checked').map(function() {
+        return $('.models-column-one input:checked, .models-column-two input:checked').map(function () {
             return $(this).data('networkmodel');
         }).get();
 
     }
     function getSelectedIeType() {
-        return $('.ietype-column input:checked').map(function() {
+        return $('.ietype-column input:checked').map(function () {
             return $(this).data('ietype');
         }).get().pop();
     }
     function getSelectedCoreTypes() {
-        return $('.client-platform-column .selected').map(function() {
+        return $('.client-platform-column .selected').map(function () {
             return $(this).data('coretype');
         }).get();
     }
     function getSelectedClientPlatforms() {
-        return $('.client-platform-column input:checked').map(function() {
+        return $('.client-platform-column input:checked').map(function () {
             return $(this).data('platform');
         }).get();
     }
     function getSelectedKpis() {
-        return $('.kpi-column input:checked').map(function() {
+        return $('.kpi-column input:checked').map(function () {
             return $(this).data('kpi');
         }).get();
     }
     function getSelectedPrecisions() {
-        return $('.precisions-column .selected').map(function() {
+        return $('.precisions-column .selected').map(function () {
             return $(this).data('precision');
         }).get();
     }
@@ -362,10 +409,9 @@ $(document).ready(function () {
 
         var networkModels = Graph.getNetworkModels(graph.data);
         var ieTypes = Graph.getIeTypes(graph.data);
-        var platforms = Graph.getPlatforms(graph.data);
-        var coreTypes = Graph.getCoreTypes(graph.data);
-        var kpis = Graph.getKpis(graph.data);
-        var precisions = Graph.getPrecisions(graph.data);
+        console.log(Graph.getCoreTypes(graph.data));
+        console.log(Graph.getKpis(graph.data));
+        console.log(Graph.getPrecisions(graph.data));
 
         fetch('_static/html/modal.html').then((response) => response.text()).then((text) => {
 
@@ -387,11 +433,11 @@ $(document).ready(function () {
             modal.find('.models-column-two').append(models.slice(models.length / 2));
 
             const types = ieTypes.map((ieType) => {
-                var labelText = Graph.getIeTypeText(ieType);
+                var labelText = Modal.getIeTypeLabel(ieType);
                 if (labelText) {
                     const item = $('<label class="checkmark-container">');
                     const checkboxSpan = $('<span class="checkmark radiobutton">');
-                    item.text(Graph.getIeTypeText(ieType));
+                    item.text(Modal.getIeTypeLabel(ieType));
                     const radio = $('<input type="radio" name="ietype"/>');
                     item.append(radio);
                     item.append(checkboxSpan);
@@ -404,7 +450,7 @@ $(document).ready(function () {
             //TODO: check this line
             modal.find('.ietype-column input').first().attr('checked', true);
 
-            const kpiLabels = kpis.map((kpi) => createCheckMark(kpi, 'kpi'));
+            const kpiLabels = Modal.getKpisLabels().map((kpi) => createCheckMark(kpi, 'kpi'));
             modal.find('.kpi-column').append(kpiLabels);
 
             // TODO: figure out what to do with precisions
@@ -430,26 +476,36 @@ $(document).ready(function () {
             $('.close-btn').on('click', hideModal);
 
             modal.find('.models-column-one input').on('click', function (event) {
-                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
                 renderClientPlatforms(modal, fPlatforms);
             });
             modal.find('.models-column-two input').on('click', function (event) {
-                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
                 renderClientPlatforms(modal, fPlatforms);
             });
             modal.find('.ietype-column input').on('click', function (event) {
-                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
-                renderClientPlatforms(modal, fPlatforms);
                 if (getSelectedIeType() === 'core') {
-                    showCoreSelectorTypes(coreTypes);
+                    showCoreSelectorTypes(Modal.getCoreTypesLabels());
+
+                    $('.client-platform-column .selectable-box').on('click', function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selected');
+                        } else {
+                            $(this).addClass('selected');
+                        }
+                        var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
+                        renderClientPlatforms(modal, fPlatforms);
+                    });
                 }
                 else {
                     hideCoreSelectorTypes();
                 }
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
+                renderClientPlatforms(modal, fPlatforms);
             });
             modal.find('.kpi-column input').on('click', function (event) {
                 if (getSelectedKpis().includes('Throughput')) {
-                    showPrecisionSelectorTypes(precisions);
+                    showPrecisionSelectorTypes(Modal.getPrecisionsLabels());
                 }
                 else {
                     hidePrecisionSelectorTypes();
@@ -479,13 +535,6 @@ $(document).ready(function () {
             container.append(box);
         });
         $('.client-platform-column').prepend(container);
-        $('.client-platform-column .selectable-box').on('click', function() {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-            } else {
-                $(this).addClass('selected');
-            }
-        });
     }
 
     function hideCoreSelectorTypes() {
@@ -508,7 +557,7 @@ $(document).ready(function () {
 
         });
         $('.precisions-column').prepend(container);
-        $('.precisions-column .selectable-box').on('click', function() {
+        $('.precisions-column .selectable-box').on('click', function () {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
             } else {
@@ -522,9 +571,12 @@ $(document).ready(function () {
     }
 
     // TODO: matrix math or truth table testing before shipping this
-    function filterClientPlatforms(data, networkModels, ietype) {
+    function filterClientPlatforms(data, networkModels, ietype, coreTypes) {
         var first = Filter.FilterByNetworkModel(data, networkModels[0]);
         var second = Filter.FilterByIeType(first, ietype);
+        if (ietype === 'core') {
+            second = Filter.FilterByCoreTypes(second, coreTypes);
+        }
         return second;
     }
 
