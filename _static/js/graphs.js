@@ -367,11 +367,6 @@ $(document).ready(function () {
         var kpis = Graph.getKpis(graph.data);
         var precisions = Graph.getPrecisions(graph.data);
 
-
-        console.log(platforms);
-
-        console.log(graph);
-
         fetch('_static/html/modal.html').then((response) => response.text()).then((text) => {
 
             // generate and configure modal container
@@ -421,6 +416,9 @@ $(document).ready(function () {
 
             $('.clear-all-btn').on('click', () => {
                 $('.modal-content-grid-container input:checkbox').each((index, object) => $(object).prop('checked', false));
+                $('.client-platform-column').empty();
+                $('.precisions-column').empty();
+                modal.find('.ietype-column input').first().prop('checked', true);
             })
 
             $('#modal-build-graphs-btn').on('click', () => {
