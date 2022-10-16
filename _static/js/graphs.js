@@ -570,7 +570,7 @@ $(document).ready(function () {
 
     function getChartOptions(title) {
         return {
-            responsive: true,
+            responsive: false,
             maintainAspectRatio: false,
             legend: { display: true, position: 'bottom' },
             title: {
@@ -652,11 +652,11 @@ $(document).ready(function () {
             console.log(platforms);
             console.log(filteredGraphData);
 
+            $('.chart-placeholder').append(chartContainer);
             if (filteredGraphData.length > 0) {
                 createChartWithNewData(filteredGraphData, chartContainer, kpis, ietype, precisions);
             }
 
-            $('.chart-placeholder').append(chartContainer);
         })
     };
 
@@ -728,7 +728,7 @@ $(document).ready(function () {
         chartWrap.append(graphClass);
 
         graphConfigs.forEach((graphConfig, index) => {
-
+            // TODO: Clean this up
             switch (index) {
                 case 0:
                     processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column');
