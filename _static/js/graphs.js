@@ -182,17 +182,19 @@ class Modal {
             }
         });
     }
-    static getPrecision(label) {
-        switch (label) {
-            case 'INT8':
-                return 'int8';
-            case 'FP16':
-                return 'fp16';
-            case 'FP32':
-                return 'fp32';
-            default:
-                return '';
-        }
+    static getPrecisions(labels) {
+        return labels.map((label) => {
+            switch (label) {
+                case 'INT8':
+                    return 'int8';
+                case 'FP16':
+                    return 'fp16';
+                case 'FP32':
+                    return 'fp32';
+                default:
+                    return '';
+            }
+        });
     }
 }
 
@@ -469,7 +471,7 @@ $(document).ready(function () {
 
             $('#modal-build-graphs-btn').on('click', () => {
                 $('.configure-graphs-content').hide();
-                clickBuildGraphs(graph, getSelectedNetworkModels(), getSelectedIeType(), getSelectedClientPlatforms(), getSelectedKpis(), getSelectedPrecisions());
+                clickBuildGraphs(graph, getSelectedNetworkModels(), getSelectedIeType(), getSelectedClientPlatforms(), getSelectedKpis(), Modal.getPrecisions(getSelectedPrecisions()));
             });
 
             $('.modal-close').on('click', hideModal);
@@ -477,31 +479,25 @@ $(document).ready(function () {
 
             modal.find('.models-column-one input').on('click', function (event) {
                 var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
-                renderClientPlatforms(modal, fPlatforms);
+                renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
             });
             modal.find('.models-column-two input').on('click', function (event) {
                 var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
-                renderClientPlatforms(modal, fPlatforms);
+                renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
             });
             modal.find('.ietype-column input').on('click', function (event) {
                 if (getSelectedIeType() === 'core') {
                     showCoreSelectorTypes(Modal.getCoreTypesLabels());
-
                     $('.client-platform-column .selectable-box').on('click', function () {
-                        if ($(this).hasClass('selected')) {
-                            $(this).removeClass('selected');
-                        } else {
-                            $(this).addClass('selected');
-                        }
                         var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
-                        renderClientPlatforms(modal, fPlatforms);
+                        renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
                     });
                 }
                 else {
                     hideCoreSelectorTypes();
                 }
                 var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
-                renderClientPlatforms(modal, fPlatforms);
+                renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
             });
             modal.find('.kpi-column input').on('click', function (event) {
                 if (getSelectedKpis().includes('Throughput')) {
@@ -535,6 +531,13 @@ $(document).ready(function () {
             container.append(box);
         });
         $('.client-platform-column').prepend(container);
+        $('.client-platform-column .selectable-box').on('click', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+        });
     }
 
     function hideCoreSelectorTypes() {
@@ -580,8 +583,7 @@ $(document).ready(function () {
         return second;
     }
 
-    function renderClientPlatforms(modal, platforms) {
-        var platformNames = Graph.getPlatformNames(platforms);
+    function renderClientPlatforms(modal, platformNames) {
         $('.client-platform-column .checkmark-container').remove();
         const clientPlatforms = platformNames.map((platform) => createCheckMark(platform, 'platform'));
         selectAllCheckboxes(clientPlatforms);
