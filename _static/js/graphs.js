@@ -432,12 +432,6 @@ $(document).ready(function () {
             modal.find('.models-column-one input').on('click', function (event) {
                 var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
                 renderClientPlatforms(modal, fPlatforms);
-                console.log(getSelectedNetworkModels());
-                console.log(getSelectedIeType());
-                console.log(getSelectedClientPlatforms());
-                console.log(getSelectedCoreTypes());
-                console.log(getSelectedKpis());
-                console.log(getSelectedPrecisions());
             });
             modal.find('.models-column-two input').on('click', function (event) {
                 var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
@@ -446,7 +440,6 @@ $(document).ready(function () {
             modal.find('.ietype-column input').on('click', function (event) {
                 var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
                 renderClientPlatforms(modal, fPlatforms);
-                console.log(getSelectedIeType());
                 if (getSelectedIeType() === 'core') {
                     showCoreSelectorTypes(coreTypes);
                 }
@@ -482,7 +475,7 @@ $(document).ready(function () {
         coreTypes.forEach((type) => {
             var box = $('<div>' + type + '</div>');
             box.attr('data-coretype', type);
-            box.addClass('selectable-box');
+            box.addClass('selectable-box selected');
             container.append(box);
         });
         $('.client-platform-column').prepend(container);
