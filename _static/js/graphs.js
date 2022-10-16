@@ -321,6 +321,39 @@ $(document).ready(function () {
         });
     }
 
+
+    function getSelectedNetworkModels() {
+        return $('.models-column-one input:checked, .models-column-two input:checked').map(function() {
+            return $(this).data('networkmodel');
+        }).get();
+
+    }
+    function getSelectedIeType() {
+        return $('.ietype-column input:checked').map(function() {
+            return $(this).data('ietype');
+        }).get().pop();
+    }
+    function getSelectedCoreTypes() {
+        return $('.client-platform-column .selected').map(function() {
+            return $(this).data('coretype');
+        }).get();
+    }
+    function getSelectedClientPlatforms() {
+        return $('.client-platform-column input:checked').map(function() {
+            return $(this).data('platform');
+        }).get();
+    }
+    function getSelectedKpis() {
+        return $('.kpi-column input:checked').map(function() {
+            return $(this).data('kpi');
+        }).get();
+    }
+    function getSelectedPrecisions() {
+        return $('.precisions-column .selected').map(function() {
+            return $(this).data('precision');
+        }).get();
+    }
+
     function renderModal(result) {
         console.log(result.data);
         // remove header from csv line
@@ -333,18 +366,6 @@ $(document).ready(function () {
         var coreTypes = Graph.getCoreTypes(graph.data);
         var kpis = Graph.getKpis(graph.data);
         var precisions = Graph.getPrecisions(graph.data);
-
-        var selectedNetworkModels = [];
-        // TODO: check this line for defaul value
-        var selectedIeType = 'atom';
-        var selectedClientPlatforms = [];
-        var selectedKPIs = [];
-        var selectedPrecisions = [];
-
-
-        console.log(platforms);
-
-        console.log(graph);
 
         fetch('_static/html/modal.html').then((response) => response.text()).then((text) => {
 
@@ -395,74 +416,39 @@ $(document).ready(function () {
 
             $('.clear-all-btn').on('click', () => {
                 $('.modal-content-grid-container input:checkbox').each((index, object) => $(object).prop('checked', false));
-                selectedNetworkModels = [];
-                selectedIeType = 'atom';
-                selectedClientPlatforms = [];
-                selectedKPIs = [];
-                selectedPrecisions = [];
+                $('.client-platform-column').empty();
+                $('.precisions-column').empty();
+                modal.find('.ietype-column input').first().prop('checked', true);
             })
 
             $('#modal-build-graphs-btn').on('click', () => {
                 $('.configure-graphs-content').hide();
-                clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs, selectedPrecisions)
+                clickBuildGraphs(graph, getSelectedNetworkModels(), getSelectedIeType(), getSelectedClientPlatforms(), getSelectedKpis(), getSelectedPrecisions());
             });
 
             $('.modal-close').on('click', hideModal);
             $('.close-btn').on('click', hideModal);
 
             modal.find('.models-column-one input').on('click', function (event) {
-                const selectedItem = $(this).data('networkmodel');
-                if (event.target.checked) {
-                    selectedNetworkModels.push(selectedItem)
-                } else {
-                    selectedNetworkModels = selectedNetworkModels.filter((item) => item !== selectedItem);
-                }
-                var fPlatforms = filterClientPlatforms(graph.data, selectedNetworkModels, selectedIeType);
-                renderClientPlatforms(fPlatforms, modal);
-                selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
+                renderClientPlatforms(modal, fPlatforms);
             });
             modal.find('.models-column-two input').on('click', function (event) {
-                const selectedItem = $(this).data('networkmodel');
-                if (event.target.checked) {
-                    selectedNetworkModels.push(selectedItem)
-                } else {
-                    selectedNetworkModels = selectedNetworkModels.filter((item) => item !== selectedItem);
-                }
-                var fPlatforms = filterClientPlatforms(graph.data, selectedNetworkModels, selectedIeType);
-                renderClientPlatforms(fPlatforms, modal);
-                selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
-                console.log(selectedNetworkModels);
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
+                renderClientPlatforms(modal, fPlatforms);
             });
             modal.find('.ietype-column input').on('click', function (event) {
-                const selectedItem = $(this).data('ietype');
-                selectedIeType = selectedItem;
-                var fPlatforms = filterClientPlatforms(graph.data, selectedNetworkModels, selectedIeType);
-                renderClientPlatforms(fPlatforms, modal);
-                selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
-                if (selectedIeType === 'core') {
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType());
+                renderClientPlatforms(modal, fPlatforms);
+                if (getSelectedIeType() === 'core') {
                     showCoreSelectorTypes(coreTypes);
                 }
                 else {
                     hideCoreSelectorTypes();
                 }
             });
-            modal.find('.client-platform-column input').on('click', function (event) {
-                const selectedItem = $(this).data('platform');
-                if (event.target.checked) {
-                    selectedClientPlatforms.push(selectedItem)
-                } else {
-                    selectedClientPlatforms = selectedClientPlatforms.filter((item) => item !== selectedItem);
-                }
-            });
             modal.find('.kpi-column input').on('click', function (event) {
-                const selectedItem = $(this).data('kpi');
-                console.log(event.target.checked);
-                if (event.target.checked) {
-                    selectedKPIs.push(selectedItem)
-                } else {
-                    selectedKPIs = selectedKPIs.filter((item) => item !== selectedItem);
-                }
-                if (selectedKPIs.includes('Throughput')) {
+                if (getSelectedKpis().includes('Throughput')) {
                     showPrecisionSelectorTypes(precisions);
                 }
                 else {
@@ -489,7 +475,7 @@ $(document).ready(function () {
         coreTypes.forEach((type) => {
             var box = $('<div>' + type + '</div>');
             box.attr('data-coretype', type);
-            box.addClass('selectable-box');
+            box.addClass('selectable-box selected');
             container.append(box);
         });
         $('.client-platform-column').prepend(container);
@@ -542,9 +528,9 @@ $(document).ready(function () {
         return second;
     }
 
-    function renderClientPlatforms(platforms, modal) {
+    function renderClientPlatforms(modal, platforms) {
         var platformNames = Graph.getPlatformNames(platforms);
-        $('.client-platform-column').empty();
+        $('.client-platform-column .checkmark-container').remove();
         const clientPlatforms = platformNames.map((platform) => createCheckMark(platform, 'platform'));
         selectAllCheckboxes(clientPlatforms);
         modal.find('.client-platform-column').append(clientPlatforms);
