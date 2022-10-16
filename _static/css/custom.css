@@ -42,6 +42,7 @@ main img {
 }
 
 .chart-column-header-container {
+    padding-top: 8px;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -71,7 +72,6 @@ main img {
 
 .chart-labels-container {
     width: 18%;
-    height: 415px;
 }
 .chart-labels-container .title {
     text-align: right;
