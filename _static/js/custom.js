@@ -301,7 +301,7 @@ function initBenchmarkPickers() {
 
 
 function initCollapsibleHeaders() {
-  $('#accelerator-inference-engines, section[id^="cpu-inference-engine"], #performance-information-frequently-asked-questions section').on('click', function() {
+  $('#performance-information-frequently-asked-questions section').on('click', function() {
     console.log($(this).find('p, table').length);
     if(!$(this).find('table, p').is(':visible')) {
       resetCollapsibleHeaders();
@@ -314,7 +314,7 @@ function initCollapsibleHeaders() {
   });
 
   function resetCollapsibleHeaders() {
-    $('#accelerator-inference-engines, section[id^="cpu-inference-engine"],#performance-information-frequently-asked-questions section').find('h2').removeClass('expanded');
-    $('#accelerator-inference-engines table, section[id^="cpu-inference-engine"] table, #performance-information-frequently-asked-questions section p, #performance-information-frequently-asked-questions section table').hide();
+    $('#performance-information-frequently-asked-questions section').find('h2').removeClass('expanded');
+    $('#performance-information-frequently-asked-questions section p, #performance-information-frequently-asked-questions section table').hide();
   }
 }
