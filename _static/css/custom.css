@@ -107,6 +107,33 @@ main img {
     overflow-y: scroll;
 }
 
+.build-benchmark-section {
+  background-color: #f9f9f9;
+  padding: 5px 30px 80px 30px;
+}
+
+
+.build-benchmark-section #build-graphs-btn {
+  float: right;
+  margin-top: 20px;
+}
+
+.platform-configurations {
+  font-size: larger;
+}
+
+.platform-configurations div {
+  margin-bottom: 30px;
+}
+
+.platform-configurations a {
+  padding-right: 30px;
+}
+
+.platform-configurations a img {
+  padding-right: 30px;
+}
+
 .efficiency-icon {
     content: url('media/efficiency.svg');
 }
@@ -559,29 +586,33 @@ main .searchForm {
 }
 
 
-#accelerator-inference-engines h2, section[id^='cpu-inference-engine'] h2, #performance-information-frequently-asked-questions section h2 {
+#performance-information-frequently-asked-questions section h2 {
   cursor: pointer;
   color: #0054AE;
   font-size: larger;
   margin-top: 12px;
 }
 
-#accelerator-inference-engines h2::after, 
-section[id^='cpu-inference-engine'] h2::after, 
+#performance-information-frequently-asked-questions table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#performance-information-frequently-asked-questions table thead {
+  background-color: #e9eaeb;
+}
+
+
+
 #performance-information-frequently-asked-questions section h2::before {
   content: url('media/chevron-right.svg');
   vertical-align: -10px;
 }
 
-#accelerator-inference-engines h2.expanded::after,
-section[id^='cpu-inference-engine'] h2.expanded::after,
 #performance-information-frequently-asked-questions section h2.expanded::before {
   content: url('media/chevron-down.svg');
   vertical-align: -10px;
 }
 
-#accelerator-inference-engines table, 
-section[id^='cpu-inference-engine'] table,
 #performance-information-frequently-asked-questions section p,
 #performance-information-frequently-asked-questions section table {
   display: none;
