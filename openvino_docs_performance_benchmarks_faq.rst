@@ -1,7 +1,7 @@
 Performance Information Frequently Asked Questions
 ==================================================
 
-The following questions (Q#) and answers (A) are related to published
+The following questions and answers are related to published
 `performance benchmarks <./performance_benchmarks.md>`__.
 
 How often do performance benchmarks get updated?
