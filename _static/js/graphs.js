@@ -610,7 +610,7 @@ $(document).ready(function () {
 
     function getChartOptions(title) {
         return {
-            responsive: false,
+            responsive: true,
             maintainAspectRatio: false,
             legend: { display: true, position: 'bottom' },
             title: {

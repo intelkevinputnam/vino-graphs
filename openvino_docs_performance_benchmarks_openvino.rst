@@ -5,11 +5,11 @@
 Intel® Distribution of OpenVINO™ toolkit Benchmark Results
 =============================================================
 
-This benchmark setup includes a single machine on which both the benchmark application and the OpenVINO™ installation reside.
+This benchmark setup includes a single machine on which both the benchmark application and the OpenVINO™ installation reside. The presented performance benchmark numbers are based on the release 2022.2 of the Intel® Distribution of OpenVINO™ toolkit.
 
-The benchmark application loads the OpenVINO™ Runtime and executes inferences on the specified hardware (CPU, GPU or VPU). The benchmark application measures the time spent on actual inferencing (excluding any pre or post processing) and then reports on the inferences per second (or Frames Per Second). For more information on the benchmark application, please also refer to the entry 5 of the FAQ section doxid-openvino_docs_performance_benchmarks_faq.
+The benchmark application loads the OpenVINO™ Runtime and executes inferences on the specified hardware (CPU, GPU or VPU). It measures the time spent on actual inferencing (excluding any pre or post processing) and then reports on the inferences per second (or Frames Per Second). For additional information on the benchmark application, refer to the entry 5 of the `FAQ section <./openvino_docs_performance_benchmarks_faq.html>`__.
 
-Measuring inference performance involves many variables and is extremely use-case and application dependent. We use the below four parameters for measurements, which are key elements to consider for a successful deep learning inference application:
+Measuring inference performance involves many variables and is extremely use-case and application dependent. Below are four parameters for measurements, which are key elements to consider for a successful deep learning inference application:
 
 .. raw:: html
 
@@ -62,7 +62,7 @@ For a listing of all platforms and configuration sused for testing, refer to the
 Disclaimers
 ~~~~~~~~~~~
 
-Intel® Distribution of OpenVINO™ toolkit performance benchmark numbers are based on release 2022.1.
+Intel® Distribution of OpenVINO™ toolkit performance benchmark numbers are based on release 2022.2.
 
 Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Learn more at intel.com, or from the OEM or retailer. Performance results are based on testing as of March 17, 2022 and may not reflect all publicly available updates. See configuration disclosure for details. No product can be absolutely secure.
 
