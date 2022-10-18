@@ -80,7 +80,7 @@ main img {
     white-space: nowrap;
     display: block;
     font-size: .8rem;
-    line-height: 53px;
+    line-height: 3.42rem;
     color: gray;
 }
 
@@ -211,6 +211,7 @@ main img {
 }
 
 .modal-content {
+    overflow: auto;
     background-color: #fefefe;
     margin: 3% auto;
     padding: 36px;
@@ -312,12 +313,6 @@ main img {
 
 .graph-row-column {
     width: 20%;
-}
-
-.export-btn {
-    padding: 4px 16px;
-    border-width: 1px;
-    float: right;
 }
 
 .close-btn {

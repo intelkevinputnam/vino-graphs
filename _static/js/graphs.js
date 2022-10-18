@@ -793,15 +793,17 @@ $(document).ready(function () {
     }
 
     function processMetricNew(labels, datasets, chartTitle, container, widthClass, displayLabels) {
+        // ratio for consistent chart label height
+        var heightRatio = ((labels.length * 55 + 20) / labels.length) + (labels.length * 55);
         var chart = $('<div>');
         chart.addClass('chart');
         chart.addClass(widthClass);
-        chart.height(labels.length * 55 + 30);
+        chart.height(heightRatio);
         var canvas = $('<canvas>');
         chart.append(canvas);
         container.append(chart);
         var context = canvas.get(0).getContext('2d');
-        context.canvas.height = labels.length * 55 + 30;
+        context.canvas.height = heightRatio;
         new Chart(context, {
             type: 'horizontalBar',
             data: getChartDataNew(labels, datasets),
