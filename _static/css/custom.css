@@ -129,7 +129,7 @@ main img {
 }
 
 .build-benchmark-section img {
-    padding-top: 12px;
+    padding-top: 20px;
 }
 
 .platform-configurations {
@@ -151,16 +151,16 @@ main img {
 }
 
 .efficiency-icon {
-    content: url('media/efficiency.svg');
+    content: url('media/icon-efficiency.svg');
 }
 .latency-icon {
-    content: url('media/latency.svg');
+    content: url('media/icon-latency.svg');
 }
 .throughput-icon {
-    content: url('media/throughput.svg');
+    content: url('media/icon-throughput.svg');
 }
 .value-icon {
-    content: url('media/value.svg');
+    content: url('media/icon-value.svg');
 }
 
 /* Modal */
@@ -303,7 +303,7 @@ main img {
     color: #fff;
 }
 .modal-build-graphs-btn:disabled {
-    border-color: #0054AE;
+    border-color: #8C8C8C;
     background-color: lightgray;
 }
 
