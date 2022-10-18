@@ -48,13 +48,19 @@ For a listing of all platforms and configuration sused for testing, refer to the
     <container class="platform-configurations">
       <div>
         <a href="https://docs.openvino.ai/latest/_downloads/33ee2a13abf3ae3058381800409edc4a/platform_list_22.2.pdf" class="pdf"><img src="_static/css/media/pdf-icon.svg"/>Hardware Platforms (PDF)</a>
+      </div>
+      <div>
         <a href="https://docs.openvino.ai/latest/_downloads/fdd5a86ab44d348b13bf5be23d8c0dde/OV-2022.2-system-info-detailed.xlsx" class="xls"><img src="_static/css/media/xls-icon.svg"/>Configuration Details (XLSX)</a>
       </div>
     </container>
     <section class="build-benchmark-section">
-      <h3>Build benchmark graphs to your specifications</h3>
+      <div class="title">
+        <h3>Build benchmark graphs to your specifications</h3>
+      </div>
+      <div class="btn-container">
+        <button id="build-graphs-btn" class="configure-graphs-btn">Configure Graphs</button>
+      </div>
       <img src="_static/images/sample-graph-image.png" class="sample-graph-image">
-      <button id="build-graphs-btn" class="configure-graphs-btn">Configure Graphs</button>
     </section>
 
 

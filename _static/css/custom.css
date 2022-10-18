@@ -109,17 +109,33 @@ main img {
 
 .build-benchmark-section {
   background-color: #f9f9f9;
-  padding: 5px 30px 80px 30px;
+  padding: 10px 30px 80px 30px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
+.build-benchmark-section .title {
+    flex-grow: 1;
+  }
 
-.build-benchmark-section #build-graphs-btn {
-  float: right;
-  margin-top: 20px;
+.build-benchmark-section h3 {
+    margin-top: 1rem;
+}
+
+.build-benchmark-section .btn-container {
+    display: block;
+    width: max-content;
+    align-self: center;
+}
+
+.build-benchmark-section img {
+    padding-top: 12px;
 }
 
 .platform-configurations {
   font-size: larger;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .platform-configurations div {
@@ -127,11 +143,11 @@ main img {
 }
 
 .platform-configurations a {
-  padding-right: 30px;
+  padding-right: 24px;
 }
 
 .platform-configurations a img {
-  padding-right: 30px;
+  padding-right: 24px;
 }
 
 .efficiency-icon {
