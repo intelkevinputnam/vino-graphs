@@ -403,6 +403,18 @@ $(document).ready(function () {
         }).get();
     }
 
+    function validateSelections() {
+        if (getSelectedNetworkModels().length > 0 
+        && getSelectedIeType()
+        && getSelectedClientPlatforms().length > 0
+        && getSelectedKpis().length > 0) {
+            console.log(getSelectedClientPlatforms());
+            $('#modal-build-graphs-btn').prop('disabled', false);
+            return;
+        }
+        $('#modal-build-graphs-btn').prop('disabled', true);
+    }
+
     function renderModal(result) {
         console.log(result.data);
         // remove header from csv line
@@ -467,6 +479,7 @@ $(document).ready(function () {
                 $('.client-platform-column').empty();
                 $('.precisions-column').empty();
                 modal.find('.ietype-column input').first().prop('checked', true);
+                validateSelections();
             })
 
             $('#modal-build-graphs-btn').on('click', () => {
@@ -491,6 +504,7 @@ $(document).ready(function () {
                     $('.client-platform-column .selectable-box').on('click', function () {
                         var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
                         renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
+                        validateSelections();
                     });
                 }
                 else {
@@ -507,6 +521,7 @@ $(document).ready(function () {
                     hidePrecisionSelectorTypes();
                 }
             });
+            modal.find('input').on('click', validateSelections);
 
             // TODO Fix this targeting issue
             window.onclick = function (event) {
@@ -537,6 +552,7 @@ $(document).ready(function () {
             } else {
                 $(this).addClass('selected');
             }
+            validateSelections();
         });
     }
 
@@ -566,6 +582,7 @@ $(document).ready(function () {
             } else {
                 $(this).addClass('selected');
             }
+            validateSelections();
         });
     }
 
@@ -588,6 +605,7 @@ $(document).ready(function () {
         const clientPlatforms = platformNames.map((platform) => createCheckMark(platform, 'platform'));
         selectAllCheckboxes(clientPlatforms);
         modal.find('.client-platform-column').append(clientPlatforms);
+        modal.find('.client-platform-column input').on('click', validateSelections);
     }
 
     function createCheckMark(itemLabel, modelLabel) {
@@ -746,8 +764,6 @@ $(document).ready(function () {
             chartColumnHeaderContainer.append(columnHeaderContainer);
         });
 
-        console.log(graphConfigs);
-
         // get the client platform labels and create labels for all the graphs
 
         var labelsContainer = $('<div>');
@@ -756,8 +772,6 @@ $(document).ready(function () {
         labels.forEach((label) => {
             labelsContainer.append($('<div class="title">' + label + '</div>'));
         });
-
-        console.log(labels);
 
         // get the legend and create legends for each graph
 

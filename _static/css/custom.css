@@ -286,6 +286,10 @@ main img {
     background-color: #0054AE;
     color: #fff;
 }
+.modal-build-graphs-btn:disabled {
+    border-color: #0054AE;
+    background-color: lightgray;
+}
 
 .modal-footer {
     display: none;
