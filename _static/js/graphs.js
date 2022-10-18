@@ -408,7 +408,15 @@ $(document).ready(function () {
         && getSelectedIeType()
         && getSelectedClientPlatforms().length > 0
         && getSelectedKpis().length > 0) {
-            console.log(getSelectedClientPlatforms());
+            console.log(getSelectedKpis());
+            if (getSelectedKpis().includes('Throughput')) {
+                if (getSelectedPrecisions().length > 0) {
+                    $('#modal-build-graphs-btn').prop('disabled', false);
+                    return;
+                }
+                $('#modal-build-graphs-btn').prop('disabled', true);
+                return;
+            }
             $('#modal-build-graphs-btn').prop('disabled', false);
             return;
         }
