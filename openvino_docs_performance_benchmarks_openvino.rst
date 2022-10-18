@@ -47,8 +47,8 @@ For a listing of all platforms and configuration sused for testing, refer to the
 
     <container class="platform-configurations">
       <div>
-        <a href="google.com" class="pdf"><img src="_static/css/media/pdf-icon.svg"/>Hardware Platforms (PDF)</a>
-        <a href="google.com" class="xls"><img src="_static/css/media/xls-icon.svg"/>Configuration Details (XLS)</a>
+        <a href="https://docs.openvino.ai/latest/_downloads/33ee2a13abf3ae3058381800409edc4a/platform_list_22.2.pdf" class="pdf"><img src="_static/css/media/pdf-icon.svg"/>Hardware Platforms (PDF)</a>
+        <a href="https://docs.openvino.ai/latest/_downloads/fdd5a86ab44d348b13bf5be23d8c0dde/OV-2022.2-system-info-detailed.xlsx" class="xls"><img src="_static/css/media/xls-icon.svg"/>Configuration Details (XLSX)</a>
       </div>
     </container>
     <section class="build-benchmark-section">

@@ -305,7 +305,7 @@ function initCollapsibleHeaders() {
     console.log($(this).find('p, table').length);
     if(!$(this).find('table, p').is(':visible')) {
       resetCollapsibleHeaders();
-      $(this).find('table, p').show();
+      $(this).find('table, p').css('display', 'block');
       $(this).find('h2').addClass('expanded')
       $(this).find('h2').get(0).scrollIntoView();
     } else {

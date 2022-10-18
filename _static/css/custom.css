@@ -593,8 +593,22 @@ main .searchForm {
   margin-top: 12px;
 }
 
-#performance-information-frequently-asked-questions table tr:nth-child(even) {
+#performance-information-frequently-asked-questions table tr:nth-child(even),
+table#model-accuracy-and-perf-int8-fp32-table tr:nth-child(even),
+table#model-accuracy-and-perf-int8-fp32-table .light-header {
   background-color: #f9f9f9;
+}
+
+table#model-accuracy-and-perf-int8-fp32-table tr.header {
+  background-color: #e9eaeb;
+}
+
+table#model-accuracy-and-perf-int8-fp32-table td.data {
+  border-left: #e9eaeb solid 1px;
+}
+
+#performance-information-frequently-asked-questions table {
+  overflow: auto;
 }
 
 #performance-information-frequently-asked-questions table thead {
