@@ -47,6 +47,7 @@ $(document).ready(function () {
     addLegalNotice();
     updateSearchForm();
     initBenchmarkPickers();
+    initCollapsibleHeaders();
     createSphinxTabSets();
 });
 
@@ -296,4 +297,24 @@ function initBenchmarkPickers() {
       }
     });
   });
+}
+
+
+function initCollapsibleHeaders() {
+  $('#performance-information-frequently-asked-questions section').on('click', function() {
+    console.log($(this).find('p, table').length);
+    if(!$(this).find('table, p').is(':visible')) {
+      resetCollapsibleHeaders();
+      $(this).find('table, p').css('display', 'block');
+      $(this).find('h2').addClass('expanded')
+      $(this).find('h2').get(0).scrollIntoView();
+    } else {
+      resetCollapsibleHeaders();
+    }
+  });
+
+  function resetCollapsibleHeaders() {
+    $('#performance-information-frequently-asked-questions section').find('h2').removeClass('expanded');
+    $('#performance-information-frequently-asked-questions section p, #performance-information-frequently-asked-questions section table').hide();
+  }
 }

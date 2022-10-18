@@ -11,11 +11,22 @@ class Filter {
         return graphDataArr.filter((data) => data.ieType.includes(value));
     }
 
+    // param: GraphData[], clientPlatforms[]
+    static FilterByClientPlatforms(graphDataArr, platformsArr) {
+        return graphDataArr.filter((data) => platformsArr.includes(data.platformName));
+    }
+
+    // param: GraphData[], coreTypes[]
+    static FilterByCoreTypes(graphDataArr, coreTypes) {
+        if (coreTypes) {
+            return graphDataArr.filter((data) => coreTypes.includes(data.ieType));
+        }
+        return graphDataArr;
+    }
+
     // param: GraphData[] (of one networkModel), key (throughput, latency, efficiency, value)
     static getKpiData(graphDataArr, key) {
         return graphDataArr.map((data) => {
-            console.log(data);
-            console.log(data[key]);
             return data[key];
         });
     }
@@ -27,7 +38,7 @@ class ExcelDataTransformer {
             return !entry.includes('begin_rec') && !entry.includes('end_rec');
         });
         // do other purging and data massaging here
-        console.log(entries);
+
         // else generate
         return entries.map((entry) => {
             return new GraphData(new ExcelData(entry));
@@ -131,13 +142,8 @@ class Precision {
     fp32 = '';
 }
 
-class Graph {
-    constructor(data) {
-        this.data = data;
-    }
-    data = new GraphData();
-
-    static getIeTypeText(ietype) {
+class Modal {
+    static getIeTypeLabel(ietype) {
         switch (ietype) {
             case 'core':
                 return 'Client Platforms (Intel® Core™)';
@@ -151,6 +157,50 @@ class Graph {
                 return '';
         }
     }
+    static getCoreTypesLabels() {
+        return ['CPU', 'iGPU', 'CPU+iGPU'];
+    }
+    static getKpisLabels() {
+        return ['Throughput', 'Value', 'Efficiency', 'Latency'];
+    }
+    static getPrecisionsLabels() {
+        return ['INT8', 'FP16', 'FP32'];
+    }
+    static getCoreTypes(labels) {
+        return labels.map((label) => {
+            switch (label) {
+                case 'CPU':
+                    return 'core';
+                case 'iGPU':
+                    return 'core-iGPU';
+                case 'CPU+iGPU':
+                    return 'core-CPU+iGPU';
+                default:
+                    return '';
+            }
+        });
+    }
+    static getPrecisions(labels) {
+        return labels.map((label) => {
+            switch (label) {
+                case 'INT8':
+                    return 'int8';
+                case 'FP16':
+                    return 'fp16';
+                case 'FP32':
+                    return 'fp32';
+                default:
+                    return '';
+            }
+        });
+    }
+}
+
+class Graph {
+    constructor(data) {
+        this.data = data;
+    }
+    data = new GraphData();
 
     // functions to get unique keys 
     static getNetworkModels(graphDataArr) {
@@ -162,12 +212,8 @@ class Graph {
     static getPlatforms(graphDataArr) {
         return Array.from(new Set(graphDataArr.map((obj) => obj.platformName)));
     }
-    static getKpis(graphDataArr) {
-        return ['Throughput', 'Value', 'Efficiency', 'Latency'];
-    }
-    // TODO: this is naive, will need to do an actual filter here potentially
-    static getPrecisions(graphDataArr) {
-        return ['int8', 'fp16', 'fp32'];
+    static getCoreTypes(graphDataArr) {
+        return Array.from(new Set(graphDataArr.map((obj) => obj.ieType)));
     }
 
     // param: GraphData[]
@@ -175,11 +221,10 @@ class Graph {
         return graphDataArr.map((data) => data.platformName);
     }
 
-    // param: GraphData[]
+    // param: GraphData[], kpi: string
     static getDatabyKPI(graphDataArr, kpi) {
         switch (kpi) {
             case 'throughput':
-                // returning int8 for now but should scale to select n <= 3 of 3
                 return graphDataArr.map((data) => data.kpi.throughput);
             case 'latency':
                 return graphDataArr.map((data) => data.kpi.latency);
@@ -192,33 +237,67 @@ class Graph {
         }
     }
 
-    // this is the function that tells the graph software how to render
-    static getGraphConfig(kpi) {
+    // this returns an object that is used to ender the chart
+    static getGraphConfig(kpi, precisions) {
         switch (kpi) {
             case 'throughput':
                 return {
-                    chartTitle: 'Throughput (higher is better)',
-                    datasets: [{ data: null, color: '#00C7FD', label: 'FPS (INT8)' },
-                    { data: null, color: '#0068B5', label: 'FPS (FP16)' },
-                    { data: null, color: '#00C7FD', label: 'FPS (FP32)' }],
+                    chartTitle: 'Throughput',
+                    chartSubtitle: '(higher is better)',
+                    iconClass: 'throughput-icon',
+                    datasets: precisions.map((precision) => this.getPrecisionConfig(precision)),
                 };
             case 'latency':
                 return {
-                    chartTitle: 'Latency (lower is better)',
+                    chartTitle: 'Latency',
+                    chartSubtitle: '(lower is better)',
+                    iconClass: 'latency-icon',
                     datasets: [{ data: null, color: '#8F5DA2', label: 'Milliseconds' }],
                 };
             case 'value':
                 return {
-                    chartTitle: 'Value (higher is better)',
+                    chartTitle: 'Value',
+                    chartSubtitle: '(higher is better)',
+                    iconClass: 'value-icon',
                     datasets: [{ data: null, color: '#8BAE46', label: 'FPS/$ (INT8)' }],
                 };
             case 'efficiency':
                 return {
-                    chartTitle: 'Efficiency (higher is better)',
+                    chartTitle: 'Efficiency',
+                    chartSubtitle: '(higher is better)',
+                    iconClass: 'efficiency-icon',
                     datasets: [{ data: null, color: '#E96115', label: 'FPS/TDP (INT8)' }],
                 };
             default:
                 return {};
+        }
+    }
+
+    static getPrecisionConfig(precision) {
+        switch (precision) {
+            case 'int8':
+                return { data: null, color: '#00C7FD', label: 'FPS (INT8)' };
+            case 'fp16':
+                return { data: null, color: '#0068B5', label: 'FPS (FP16)' };
+            case 'fp32':
+                return { data: null, color: '#00C7FD', label: 'FPS (FP32)' };
+            default:
+                return {};
+        }
+    }
+
+    static getGraphPlatformText(platform) {
+        switch (platform) {
+            case 'atom':
+                return 'Mobile Platforms';
+            case 'core':
+                return 'Client Platforms';
+            case 'xeon':
+                return 'Server Platforms';
+            case 'accel':
+                return 'Accelerated Platforms';
+            default:
+                return '';
         }
     }
 }
@@ -227,24 +306,27 @@ $(document).ready(function () {
 
     $('#build-graphs-btn').on('click', showModal);
 
-    function clickBuildGraphs(graph, networkModels, ietype, platforms, kpis) {
-        renderData(graph, networkModels, ietype, platforms, kpis);
+    function clickBuildGraphs(graph, networkModels, ietype, platforms, kpis, precisions) {
+        renderData(graph, networkModels, ietype, platforms, kpis, precisions);
 
         $('.edit-settings-btn').show();
         $('.clear-all-btn').hide();
+        $('.modal-footer').show();
+        $('.configure-graphs-header h3').addClass('header-inactive');
+        $('.benchmark-graph-results-header h3').removeClass('header-inactive');
 
         $('.edit-settings-btn').on('click', (event) => {
             $('.configure-graphs-content').show();
             $('.edit-settings-btn').hide();
             $('.clear-all-btn').show();
+            $('.modal-footer').hide();
+            $('.configure-graphs-header h3').removeClass('header-inactive');
+            $('.benchmark-graph-results-header h3').addClass('header-inactive');
             $('.chart-placeholder').empty();
         });
 
         $('.graph-chart-title-header').on('click', (event) => {
-            console.log(event);
-            parent = event.target.parentElement;
-
-            console.log($(parent).children('.chart-wrap.container').is(":visible"))
+            var parent = event.target.parentElement;
 
             if ($(parent).children('.chart-wrap.container').is(":visible")) {
                 $(parent).children('.chart-wrap.container').hide();
@@ -252,7 +334,7 @@ $(document).ready(function () {
                 $(parent).children('.chevron-down-btn').hide();
                 $
             } else {
-                $(parent).children('.chart-wrap.container').show();                    
+                $(parent).children('.chart-wrap.container').show();
                 $(parent).children('.chevron-down-btn').show();
                 $(parent).children('.chevron-right-btn').hide();
             }
@@ -261,45 +343,80 @@ $(document).ready(function () {
 
     function hideModal() {
         $('#graphModal').hide();
+        $('body').css('overflow', 'auto');
     }
-
+    
     function showModal() {
-
+        $('body').css('overflow', 'hidden');
         if ($('#graphModal').length) {
             $('#graphModal').show();
             return;
         }
 
-        const staticData = 'csv/testdatacsv.csv';
-
-        Papa.parse(staticData, {
+        const dataPath = 'csv/benchmark-data.csv';
+        Papa.parse(dataPath, {
             download: true,
             complete: renderModal
         });
     }
 
+    function getSelectedNetworkModels() {
+        return $('.models-column-one input:checked, .models-column-two input:checked').map(function () {
+            return $(this).data('networkmodel');
+        }).get();
+    }
+    function getSelectedIeType() {
+        return $('.ietype-column input:checked').map(function () {
+            return $(this).data('ietype');
+        }).get().pop();
+    }
+    function getSelectedCoreTypes() {
+        return $('.client-platform-column .selected').map(function () {
+            return $(this).data('coretype');
+        }).get();
+    }
+    function getSelectedClientPlatforms() {
+        return $('.client-platform-column input:checked').map(function () {
+            return $(this).data('platform');
+        }).get();
+    }
+    function getSelectedKpis() {
+        return $('.kpi-column input:checked').map(function () {
+            return $(this).data('kpi');
+        }).get();
+    }
+    function getSelectedPrecisions() {
+        return $('.precisions-column .selected').map(function () {
+            return $(this).data('precision');
+        }).get();
+    }
+
+    function validateSelections() {
+        if (getSelectedNetworkModels().length > 0 
+        && getSelectedIeType()
+        && getSelectedClientPlatforms().length > 0
+        && getSelectedKpis().length > 0) {
+            if (getSelectedKpis().includes('Throughput')) {
+                if (getSelectedPrecisions().length > 0) {
+                    $('#modal-build-graphs-btn').prop('disabled', false);
+                    return;
+                }
+                $('#modal-build-graphs-btn').prop('disabled', true);
+                return;
+            }
+            $('#modal-build-graphs-btn').prop('disabled', false);
+            return;
+        }
+        $('#modal-build-graphs-btn').prop('disabled', true);
+    }
+
     function renderModal(result) {
-        console.log(result.data);
         // remove header from csv line
         result.data.shift();
         var graph = new Graph(ExcelDataTransformer.transform(result.data));
 
         var networkModels = Graph.getNetworkModels(graph.data);
         var ieTypes = Graph.getIeTypes(graph.data);
-        var platforms = Graph.getPlatforms(graph.data);
-        var kpis = Graph.getKpis(graph.data);
-        var precisions = Graph.getPrecisions(graph.data);
-
-        var selectedNetworkModels = [];
-        // TODO: check this line for defaul value
-        var selectedIeType = 'atom';
-        var selectedClientPlatforms = [];
-        var selectedKPIs = [];
-
-
-        console.log(platforms);
-
-        console.log(graph);
 
         fetch('_static/html/modal.html').then((response) => response.text()).then((text) => {
 
@@ -316,25 +433,16 @@ $(document).ready(function () {
             // hide edit settings button
             $('.edit-settings-btn').hide();
 
-            const models = networkModels.map((networkModel) => {
-                const item = $('<label class="checkmark-container">');
-                item.text(networkModel);
-                const checkbox = $('<input type="checkbox"/>');
-                const checkboxSpan = $('<span class="checkmark">');
-                item.append(checkbox);
-                item.append(checkboxSpan);
-                checkbox.attr('data-networkmodel', networkModel);
-                return item;
-            });
+            const models = networkModels.map((networkModel) => createCheckMark(networkModel, 'networkmodel'));
             modal.find('.models-column-one').append(models.slice(0, models.length / 2));
             modal.find('.models-column-two').append(models.slice(models.length / 2));
 
             const types = ieTypes.map((ieType) => {
-                var labelText = Graph.getIeTypeText(ieType);
+                var labelText = Modal.getIeTypeLabel(ieType);
                 if (labelText) {
                     const item = $('<label class="checkmark-container">');
                     const checkboxSpan = $('<span class="checkmark radiobutton">');
-                    item.text(Graph.getIeTypeText(ieType));
+                    item.text(Modal.getIeTypeLabel(ieType));
                     const radio = $('<input type="radio" name="ietype"/>');
                     item.append(radio);
                     item.append(checkboxSpan);
@@ -343,110 +451,155 @@ $(document).ready(function () {
                 }
             });
             modal.find('.ietype-column').append(types);
+            modal.find('.ietype-column input').first().prop('checked', true);
 
-            //TODO: check this line
-            modal.find('.ietype-column input').first().attr('checked', true);
-
-            const kpiLabels = kpis.map((kpi) => {
-                const item = $('<div>');
-                const checkbox = $('<input type="checkbox"/>');
-                item.append(checkbox);
-                item.append($('<label>' + kpi + '</label>'));
-                checkbox.attr('data-kpi', kpi);
-                return item;
-            });
+            const kpiLabels = Modal.getKpisLabels().map((kpi) => createCheckMark(kpi, 'kpi'));
             modal.find('.kpi-column').append(kpiLabels);
-
-            // TODO: figure out what to do with precisions
-            // const precisionLabels = precisions.map((precision) => {
-
-            // });
 
             $('body').prepend(modal);
 
-            $('#modal-build-graphs-btn').on('click', () => { 
-                $('.configure-graphs-content').hide();
-                clickBuildGraphs(graph, selectedNetworkModels, selectedIeType, selectedClientPlatforms, selectedKPIs) 
+            $('.clear-all-btn').on('click', () => {
+                $('.modal-content-grid-container input:checkbox').each((index, object) => $(object).prop('checked', false));
+                $('.client-platform-column').empty();
+                $('.precisions-column').empty();
+                modal.find('.ietype-column input').first().prop('checked', true);
+                validateSelections();
+            })
 
+            $('#modal-build-graphs-btn').on('click', () => {
+                $('.configure-graphs-content').hide();
+                clickBuildGraphs(graph, getSelectedNetworkModels(), getSelectedIeType(), getSelectedClientPlatforms(), getSelectedKpis(), Modal.getPrecisions(getSelectedPrecisions()));
             });
 
             $('.modal-close').on('click', hideModal);
+            $('.close-btn').on('click', hideModal);
+
             modal.find('.models-column-one input').on('click', function (event) {
-                const selectedItem = $(this).data('networkmodel');
-                if (event.target.checked) {
-                    selectedNetworkModels.push(selectedItem)
-                } else {
-                    selectedNetworkModels = selectedNetworkModels.filter((item) => item !== selectedItem);
-                }
-                var fPlatforms = filterClientPlatforms(graph.data, selectedNetworkModels, selectedIeType);
-                renderClientPlatforms(fPlatforms, modal);
-                selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
+                renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
             });
             modal.find('.models-column-two input').on('click', function (event) {
-                const selectedItem = $(this).data('networkmodel');
-                if (event.target.checked) {
-                    selectedNetworkModels.push(selectedItem)
-                } else {
-                    selectedNetworkModels = selectedNetworkModels.filter((item) => item !== selectedItem);
-                }
-                var fPlatforms = filterClientPlatforms(graph.data, selectedNetworkModels, selectedIeType);
-                renderClientPlatforms(fPlatforms, modal);
-                selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
-                console.log(selectedNetworkModels);
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
+                renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
             });
             modal.find('.ietype-column input').on('click', function (event) {
-                const selectedItem = $(this).data('ietype');
-                selectedIeType = selectedItem;
-                var fPlatforms = filterClientPlatforms(graph.data, selectedNetworkModels, selectedIeType);
-                renderClientPlatforms(fPlatforms, modal);
-                selectedClientPlatforms = Graph.getPlatformNames(fPlatforms);
-                console.log(selectedIeType);
+                if (getSelectedIeType() === 'core') {
+                    showCoreSelectorTypes(Modal.getCoreTypesLabels(), graph.data, modal);
+                }
+                else {
+                    hideCoreSelectorTypes();
+                }
+                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
+                renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
             });
             modal.find('.kpi-column input').on('click', function (event) {
-                const selectedItem = $(this).data('kpi');
-                console.log(event.target.checked);
-                if (event.target.checked) {
-                    selectedKPIs.push(selectedItem)
-                } else {
-                    selectedKPIs = selectedKPIs.filter((item) => item !== selectedItem);
+                if (getSelectedKpis().includes('Throughput')) {
+                    showPrecisionSelectorTypes(Modal.getPrecisionsLabels());
                 }
-                console.log(selectedKPIs);
+                else {
+                    hidePrecisionSelectorTypes();
+                }
             });
-
-            // TODO Fix this targeting issue
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
+            modal.find('input').on('click', validateSelections);
         });
     }
 
-    // TODO: matrix math or truth table testing before shipping this
-    function filterClientPlatforms(data, networkModels, ietype) {
+    function showCoreSelectorTypes(coreTypes, graphDataArr,  modal) {
+        if ($('.client-platform-column').find('.selectable-box-container').length) {
+            $('.client-platform-column').find('.selectable-box-container').show();
+            return;
+        }
+        var container = $('<div>');
+        container.addClass('selectable-box-container');
+        coreTypes.forEach((type) => {
+            var box = $('<div>' + type + '</div>');
+            box.attr('data-coretype', type);
+            box.addClass('selectable-box selected');
+            container.append(box);
+        });
+        $('.client-platform-column').prepend(container);
+        $('.client-platform-column .selectable-box').on('click', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+            var fPlatforms = filterClientPlatforms(graphDataArr, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
+            renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
+            validateSelections();
+        });
+    }
+
+    function hideCoreSelectorTypes() {
+        $('.client-platform-column').find('.selectable-box-container').hide();
+    }
+
+    function showPrecisionSelectorTypes(precisions) {
+
+        if ($('.precisions-column').find('.selectable-box-container').length) {
+            $('.precisions-column').find('.selectable-box-container').show();
+            return;
+        }
+        var container = $('<div>');
+        container.addClass('selectable-box-container');
+        precisions.forEach((prec) => {
+            var box = $('<div>' + prec + '</div>');
+            box.attr('data-precision', prec);
+            box.addClass('selectable-box');
+            container.append(box);
+
+        });
+        $('.precisions-column').prepend(container);
+        $('.precisions-column .selectable-box').on('click', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                $(this).addClass('selected');
+            }
+            validateSelections();
+        });
+    }
+
+    function hidePrecisionSelectorTypes() {
+        $('.precisions-column').find('.selectable-box-container').hide();
+    }
+
+    function filterClientPlatforms(data, networkModels, ietype, coreTypes) {
         var first = Filter.FilterByNetworkModel(data, networkModels[0]);
         var second = Filter.FilterByIeType(first, ietype);
+        if (ietype === 'core') {
+            second = Filter.FilterByCoreTypes(second, coreTypes);
+        }
         return second;
-
     }
 
-    function renderClientPlatforms(platforms, modal) {
-        var platformNames = Graph.getPlatformNames(platforms);
-        $('.client-platform-column').empty();
-        const clientPlatforms = platformNames.map((platform) => {
-            const item = $('<div>');
-            const checkbox = $('<input type="checkbox"/>');
-            item.append(checkbox);
-            item.append($('<label>' + platform + '</label>'));
-            checkbox.attr('data-platform', platform);
-            checkbox.attr('checked', true);
-            return item;
-        });
+    function renderClientPlatforms(modal, platformNames) {
+        $('.client-platform-column .checkmark-container').remove();
+        const clientPlatforms = platformNames.map((platform) => createCheckMark(platform, 'platform'));
+        selectAllCheckboxes(clientPlatforms);
         modal.find('.client-platform-column').append(clientPlatforms);
+        modal.find('.client-platform-column input').on('click', validateSelections);
     }
 
+    function createCheckMark(itemLabel, modelLabel) {
+        const item = $('<label class="checkmark-container">');
+        item.text(itemLabel);
+        const checkbox = $('<input type="checkbox"/>');
+        const checkboxSpan = $('<span class="checkmark">');
+        item.append(checkbox);
+        item.append(checkboxSpan);
+        checkbox.attr('data-' + modelLabel, itemLabel);
+        return item;
+    }
 
-    function getChartOptions(title, displayLabels) {
+    // receives a jquery list of items and selects all input checkboxes
+    function selectAllCheckboxes(items) {
+        items.forEach((item) => {
+            item.find(':input').attr('checked', true);
+        });
+    }
+
+    function getChartOptions(title) {
         return {
             responsive: true,
             maintainAspectRatio: false,
@@ -463,7 +616,7 @@ $(document).ready(function () {
                 }],
                 yAxes: [{
                     ticks: {
-                        display: displayLabels, //this will remove only the label
+                        display: false, //this will remove only the label
                         beginAtZero: true
                     }
                 }]
@@ -501,17 +654,14 @@ $(document).ready(function () {
         }
     }
 
-    function renderData(graph, networkModels, ietype, platforms, kpis) {
+    function renderData(graph, networkModels, ietype, platforms, kpis, precisions) {
 
         $('.chart-placeholder').empty();
         networkModels.forEach((networkModel) => {
             // graph title
             var chartName = networkModel;
-            // graph title
             var chartSlug = chartName.replace(')', '').replace(' (', '-');
-            console.log(chartSlug);
             var chartContainer = $('<div>');
-            // apply graph title temporary readdress
 
             var chevronDown = '<span class="chevron-down-btn"></span>';
             var chevronRight = '<span style="display:none" class="chevron-right-btn"></span>';
@@ -526,38 +676,35 @@ $(document).ready(function () {
 
             // Array of Arrays
             var filteredNetworkModels = Filter.FilterByNetworkModel(graph.data, networkModel);
-            console.log(filteredNetworkModels);
-            var filteredGraphData = Filter.FilterByIeType(filteredNetworkModels, ietype);
-            console.log(filteredGraphData);
+            var filteredIeTypes = Filter.FilterByIeType(filteredNetworkModels, ietype);
+            var filteredGraphData = Filter.FilterByClientPlatforms(filteredIeTypes, platforms);
 
+            $('.chart-placeholder').append(chartContainer);
             if (filteredGraphData.length > 0) {
-                createChartWithNewData(filteredGraphData, chartContainer, kpis);
+                createChartWithNewData(filteredGraphData, chartContainer, kpis, ietype, precisions);
             }
 
-            $('.chart-placeholder').append(chartContainer);            
         })
     };
 
 
     // this function should take the final data set and turn it into graphs
     // params: GraphData, unused, chartContainer
-    function createChartWithNewData(model, chartContainer, kpis) {
+    function createChartWithNewData(model, chartContainer, kpis, ietype, precisions) {
         var chartWrap = $('<div>');
         chartWrap.addClass('chart-wrap');
         chartWrap.addClass('container');
         chartContainer.append(chartWrap);
         var labels = Graph.getPlatformNames(model);
-        console.log('LABELS');
-        console.log(model);
 
-        var graphConfigs = kpis.map((kpiii) => {
-            var kpi = kpiii.toLowerCase();
+        var graphConfigs = kpis.map((str) => {
+            var kpi = str.toLowerCase();
             if (kpi === 'throughput') {
                 var throughputData = Graph.getDatabyKPI(model, kpi);
-                var config = Graph.getGraphConfig(kpi);
-                config.datasets[0].data = throughputData.map(tData => tData.int8);
-                config.datasets[1].data = throughputData.map(tData => tData.fp16);
-                //config.datasets[2].data = throughputData.map(tData => tData.fp32);
+                var config = Graph.getGraphConfig(kpi, precisions);
+                precisions.forEach((prec, index) => {
+                    config.datasets[index].data = throughputData.map(tData => tData[prec]);
+                });
                 return config;
             }
             var config = Graph.getGraphConfig(kpi);
@@ -565,29 +712,44 @@ $(document).ready(function () {
             return config;
         });
 
+
+        // get the kpi title's and create headers for the graphs 
+        var chartColumnHeaderContainer = $('<div>');
+        chartColumnHeaderContainer.addClass('chart-column-header-container');
+        chartColumnHeaderContainer.append($('<div class="chart-column-title"></div>'));
+        graphConfigs.forEach((graphConfig) => {
+            var columnHeaderContainer = $('<div>');
+            columnHeaderContainer.addClass('chart-column-title');
+            var columnIcon = $('<div class="icon">');
+            columnIcon.addClass(graphConfig.iconClass);
+            columnHeaderContainer.append(columnIcon);
+            var columnHeader = $('<div class="chart-header">');
+            columnHeader.append($('<div class="title">' + graphConfig.chartTitle + '</div>'));
+            columnHeader.append($('<div class="title">' + Graph.getGraphPlatformText(ietype) + '</div>'));
+            columnHeader.append($('<div class="subtitle">' + graphConfig.chartSubtitle + '</div>'));
+            columnHeaderContainer.append(columnHeader);
+            chartColumnHeaderContainer.append(columnHeaderContainer);
+        });
+
+        // get the client platform labels and create labels for all the graphs
+
+        var labelsContainer = $('<div>');
+        labelsContainer.addClass('chart-labels-container');
+
+        labels.forEach((label) => {
+            labelsContainer.append($('<div class="title">' + label + '</div>'));
+        });
+
+        // get the legend and create legends for each graph
+
         var graphClass = $('<div>');
         graphClass.addClass('graph-row');
+        chartWrap.append(chartColumnHeaderContainer);
+        graphClass.append(labelsContainer);
         chartWrap.append(graphClass);
 
-        graphConfigs.forEach((graphConfig, index) => {
-            var showLabels = !index ? true : false;
-
-            switch (index) {
-                case 0:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-first-column', showLabels);
-                    break;
-                case 1:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
-                    break;
-                case 2:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
-                    break;
-                case 3:
-                    processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column', showLabels);
-                    break;
-                default:
-                    break;
-            }
+        graphConfigs.forEach((graphConfig) => {
+            processMetricNew(labels, graphConfig.datasets, graphConfig.chartTitle, graphClass, 'graph-row-column');
         });
 
         // might need this line for multiple graphs on a page
@@ -596,21 +758,22 @@ $(document).ready(function () {
     }
 
     function processMetricNew(labels, datasets, chartTitle, container, widthClass, displayLabels) {
+        // ratio for consistent chart label height
+        var heightRatio = ((labels.length * 55 + 20) / labels.length) + (labels.length * 55);
         var chart = $('<div>');
         chart.addClass('chart');
         chart.addClass(widthClass);
-        chart.height(labels.length * 55 + 30);
+        chart.height(heightRatio);
         var canvas = $('<canvas>');
         chart.append(canvas);
         container.append(chart);
         var context = canvas.get(0).getContext('2d');
-        context.canvas.height = labels.length * 55 + 30;
+        context.canvas.height = heightRatio;
         new Chart(context, {
             type: 'horizontalBar',
             data: getChartDataNew(labels, datasets),
             options: getChartOptions(chartTitle, displayLabels)
         });
     }
-
 
 });

@@ -13,6 +13,13 @@ main img {
 .configure-graphs-header {
     padding-left: 16px;
 }
+.configure-graphs-header h3 {
+    float: left;
+}
+
+.header-inactive {
+    color: lightgray;
+}
 
 .configure-graphs-btn {
     padding: 4px 20px;
@@ -34,6 +41,49 @@ main img {
     padding: 12px 0;
 }
 
+.chart-column-header-container {
+    padding-top: 8px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.chart-column-title {
+    min-width: 20%;
+    flex-grow: 0 1;
+}
+.chart-column-title .icon {
+    margin-top: 6px;
+    margin-right: 8px;
+    flex-grow: 0;
+    float: left;
+}
+.chart-column-title .chart-header {
+    flex-grow: 1;
+    float: left;
+}
+.chart-column-title .title {
+    font-size: 1rem;
+    font-weight: 400;
+}
+.chart-column-title .subtitle {
+    font-size: .8rem;
+    color: gray;
+}
+
+.chart-labels-container {
+    width: 18%;
+}
+.chart-labels-container .title {
+    text-align: right;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    font-size: .8rem;
+    line-height: 3.42rem;
+    color: gray;
+}
+
 .chevron-right-btn {
     content: url('media/chevron-right.svg');
     vertical-align: middle;
@@ -51,6 +101,66 @@ main img {
 .chart {
     height: 500px;
     padding: 0;
+}
+
+.chart-placeholder {
+    overflow-y: scroll;
+}
+
+.build-benchmark-section {
+  background-color: #f9f9f9;
+  padding: 10px 30px 80px 30px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.build-benchmark-section .title {
+    flex-grow: 1;
+  }
+
+.build-benchmark-section h3 {
+    margin-top: 1rem;
+}
+
+.build-benchmark-section .btn-container {
+    display: block;
+    width: max-content;
+    align-self: center;
+}
+
+.build-benchmark-section img {
+    padding-top: 20px;
+}
+
+.platform-configurations {
+  font-size: larger;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.platform-configurations div {
+  margin-bottom: 30px;
+}
+
+.platform-configurations a {
+  padding-right: 24px;
+}
+
+.platform-configurations a img {
+  padding-right: 24px;
+}
+
+.efficiency-icon {
+    content: url('media/icon-efficiency.svg');
+}
+.latency-icon {
+    content: url('media/icon-latency.svg');
+}
+.throughput-icon {
+    content: url('media/icon-throughput.svg');
+}
+.value-icon {
+    content: url('media/icon-value.svg');
 }
 
 /* Modal */
@@ -117,14 +227,13 @@ main img {
 }
 
 .modal-content {
+    overflow: auto;
     background-color: #fefefe;
     margin: 3% auto;
     padding: 36px;
     border: 1px solid #888;
     width: 95%;
     max-height: 90%;
-    overflow-y: scroll;
-    /* Could be more or less, depending on screen size */
 }
 
 .modal-content h2 {
@@ -143,20 +252,23 @@ main img {
 
 .modal-header-grid-container {
     display: grid;
-    padding-left: 16px;
-    padding-right: 64px;
+    padding: 12px 64px 2px 16px;
     grid-template-columns: 40% 20% 20% 10% 10%;
     column-gap: 16px;
 }
 
 .modal-content-grid-container {
     display: grid;
-    padding-left: 32px;
+    padding-left: 24px;
     padding-right: 64px;
     padding-top: 8px;
     grid-template-columns: 20% 20% 20% 20% 10% 10%;
-    column-gap: 16px;
+    column-gap: 12px;
     font-size: .78rem;
+}
+
+.modal-content-grid-container .column {
+  min-width: 100px;
 }
 
 .modal-content-grid-container label {
@@ -182,11 +294,27 @@ main img {
 }
 
 .modal-build-graphs-btn {
-    margin: 10px 0;
+    margin-bottom: 10px;
+    margin-right: 3px;
     padding: 4px 16px;
     float: right;
+    border-color: #0054AE;
     background-color: #0054AE;
     color: #fff;
+}
+.modal-build-graphs-btn:disabled {
+    border-color: #8C8C8C;
+    background-color: lightgray;
+}
+
+.modal-footer {
+    display: none;
+    padding: 0;
+    border: none;
+    width: 100%;
+    position: relative;
+    bottom: -16px;
+    left: 0;
 }
 
 .benchmark-graph-results-header {
@@ -207,7 +335,13 @@ main img {
     width: 20%;
 }
 
-
+.close-btn {
+    padding: 4px 16px;
+    border-color: #0054AE;
+    background-color: #0054AE;
+    color: #fefefe;
+    float: right;
+}
 
 /* Table Sort Button */
 
@@ -357,6 +491,31 @@ main .searchForm {
 .picker-options p {
     padding: 10px 0;
     display: none;
+    border-top: #888 1px solid;
+    margin-top: 7px;
+}
+
+.selectable-box-container {
+    display: flex;
+    flex-direction: row;
+    padding: 0 0 8px 0;
+}
+
+.selectable-box {
+    border: 1px solid gray;
+    cursor: pointer;
+    flex-grow: 0;
+    font-size: .8rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    color: black;
+    background-color: #fff;
+}
+
+.selectable-box.selected {
+    color: #fff;
+    background-color: #0054AE;
+    border-color:#0068B5;
 }
 
 .checkmark-container {
@@ -439,4 +598,52 @@ main .searchForm {
   -webkit-transform: none;
   -ms-transform: none;
   transform: none;
+}
+
+
+#performance-information-frequently-asked-questions section h2 {
+  cursor: pointer;
+  color: #0054AE;
+  font-size: larger;
+  margin-top: 12px;
+}
+
+#performance-information-frequently-asked-questions table tr:nth-child(even),
+table#model-accuracy-and-perf-int8-fp32-table tr:nth-child(even),
+table#model-accuracy-and-perf-int8-fp32-table .light-header {
+  background-color: #f9f9f9;
+}
+
+table#model-accuracy-and-perf-int8-fp32-table tr.header {
+  background-color: #e9eaeb;
+}
+
+table#model-accuracy-and-perf-int8-fp32-table td.data {
+  border-left: #e9eaeb solid 1px;
+}
+
+#performance-information-frequently-asked-questions table {
+  overflow: auto;
+}
+
+#performance-information-frequently-asked-questions table thead {
+  background-color: #e9eaeb;
+}
+
+
+
+#performance-information-frequently-asked-questions section h2::before {
+  content: url('media/chevron-right.svg');
+  vertical-align: -10px;
+}
+
+#performance-information-frequently-asked-questions section h2.expanded::before {
+  content: url('media/chevron-down.svg');
+  vertical-align: -10px;
+}
+
+#performance-information-frequently-asked-questions section p,
+#performance-information-frequently-asked-questions section table {
+  display: none;
+  padding-left: 30px;
 }
