@@ -36,6 +36,15 @@ main img {
     margin: 0;
 }
 
+.empty-chart-container {
+  height: 80px;
+  line-height: 80px;
+  width: 100%;
+  text-align: center;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+}
+
 .graph-chart-title {
     vertical-align: middle;
     padding: 12px 0;
@@ -635,6 +644,7 @@ table#model-accuracy-and-perf-int8-fp32-table td.data {
 #performance-information-frequently-asked-questions section h2::before {
   content: url('media/chevron-right.svg');
   vertical-align: -10px;
+  margin-left: -32px;
 }
 
 #performance-information-frequently-asked-questions section h2.expanded::before {
