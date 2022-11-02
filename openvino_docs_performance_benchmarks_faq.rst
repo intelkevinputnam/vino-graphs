@@ -1,3 +1,7 @@
+..
+   _ Changes to this title must require changes to custom.css as styling will 
+   _ be lost (rst renders the title as an id that is used in a css selector #performance-information-frequently-asked-questions)
+
 Performance Information Frequently Asked Questions
 ==================================================
 

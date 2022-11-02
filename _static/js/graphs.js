@@ -1,9 +1,15 @@
-// import { Graph, ExcelDataTransformer } from './classes.js';
 class Filter {
 
-    // param: GraphData[], networkModel
-    static FilterByNetworkModel(graphDataArr, value) {
-        return graphDataArr.filter((data) => data.networkModel === value);
+    // param: GraphData[], networkModels[]
+    static FilterByNetworkModel(graphDataArr, networkModels) {
+        // This is a bit obtuse, collect all options from all models
+        // Some of them might return dupes, so convert them to a map, and get unique objects based on names
+        const optionMap = new Map();
+        networkModels.map((model) => graphDataArr.filter((graphData => graphData.networkModel === model)))
+          .flat(1)
+          .forEach(item => optionMap.set(item.platformName, item));
+        // convert the option map back to an array with just the values
+        return Array.from(optionMap.values());
     }
 
     // param: GraphData[], ieType
@@ -328,13 +334,13 @@ $(document).ready(function () {
         $('.graph-chart-title-header').on('click', (event) => {
             var parent = event.target.parentElement;
 
-            if ($(parent).children('.chart-wrap.container').is(":visible")) {
-                $(parent).children('.chart-wrap.container').hide();
+            if ($(parent).children('.chart-wrap.container,.empty-chart-container').is(":visible")) {
+                $(parent).children('.chart-wrap.container,.empty-chart-container').hide();
                 $(parent).children('.chevron-right-btn').show();
                 $(parent).children('.chevron-down-btn').hide();
                 $
             } else {
-                $(parent).children('.chart-wrap.container').show();
+                $(parent).children('.chart-wrap.container,.empty-chart-container').show();
                 $(parent).children('.chevron-down-btn').show();
                 $(parent).children('.chevron-right-btn').hide();
             }
@@ -458,13 +464,15 @@ $(document).ready(function () {
 
             $('body').prepend(modal);
 
+            var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
+            renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
+
             $('.clear-all-btn').on('click', () => {
                 $('.modal-content-grid-container input:checkbox').each((index, object) => $(object).prop('checked', false));
-                $('.client-platform-column').empty();
                 $('.precisions-column').empty();
                 modal.find('.ietype-column input').first().prop('checked', true);
                 validateSelections();
-            })
+            });
 
             $('#modal-build-graphs-btn').on('click', () => {
                 $('.configure-graphs-content').hide();
@@ -473,15 +481,6 @@ $(document).ready(function () {
 
             $('.modal-close').on('click', hideModal);
             $('.close-btn').on('click', hideModal);
-
-            modal.find('.models-column-one input').on('click', function (event) {
-                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
-                renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
-            });
-            modal.find('.models-column-two input').on('click', function (event) {
-                var fPlatforms = filterClientPlatforms(graph.data, getSelectedNetworkModels(), getSelectedIeType(), Modal.getCoreTypes(getSelectedCoreTypes()));
-                renderClientPlatforms(modal, Graph.getPlatformNames(fPlatforms));
-            });
             modal.find('.ietype-column input').on('click', function (event) {
                 if (getSelectedIeType() === 'core') {
                     showCoreSelectorTypes(Modal.getCoreTypesLabels(), graph.data, modal);
@@ -565,12 +564,15 @@ $(document).ready(function () {
     }
 
     function filterClientPlatforms(data, networkModels, ietype, coreTypes) {
-        var first = Filter.FilterByNetworkModel(data, networkModels[0]);
-        var second = Filter.FilterByIeType(first, ietype);
+        // No longer filtering on the network type, if at some point we want the network type as a filter, uncomment this
+        // var first = Filter.FilterByNetworkModel(data, networkModels);
+        var second = Filter.FilterByIeType(data, ietype);
         if (ietype === 'core') {
-            second = Filter.FilterByCoreTypes(second, coreTypes);
+          second = Filter.FilterByCoreTypes(second, coreTypes);
         }
-        return second;
+        const optionMap = new Map();
+        second.forEach(item => optionMap.set(item.platformName, item));
+        return Array.from(optionMap.values());
     }
 
     function renderClientPlatforms(modal, platformNames) {
@@ -674,18 +676,23 @@ $(document).ready(function () {
             chartContainer.addClass('chart-container');
             chartContainer.addClass('container');
 
-            // Array of Arrays
-            var filteredNetworkModels = Filter.FilterByNetworkModel(graph.data, networkModel);
+            var filteredNetworkModels = Filter.FilterByNetworkModel(graph.data, [networkModel]);
             var filteredIeTypes = Filter.FilterByIeType(filteredNetworkModels, ietype);
             var filteredGraphData = Filter.FilterByClientPlatforms(filteredIeTypes, platforms);
 
             $('.chart-placeholder').append(chartContainer);
             if (filteredGraphData.length > 0) {
                 createChartWithNewData(filteredGraphData, chartContainer, kpis, ietype, precisions);
+            } else {
+              createEmptyChartContainer(chartContainer);
             }
 
         })
     };
+
+    function createEmptyChartContainer(chartContainer) {
+      chartContainer.append($('<div>').addClass('empty-chart-container').text('No data for this configuration.'));
+    }
 
 
     // this function should take the final data set and turn it into graphs
