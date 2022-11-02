@@ -1,4 +1,3 @@
-// import { Graph, ExcelDataTransformer } from './classes.js';
 class Filter {
 
     // param: GraphData[], networkModel
