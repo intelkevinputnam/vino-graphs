@@ -23,6 +23,8 @@ Build the docs like this:
 
 ``` bash
 sphinx-build -b html . _build/html
+
+rm -rf _build && sphinx-build -b html . _build/html
 ```
 
 The resulting files can be found in: ``_build/html``.

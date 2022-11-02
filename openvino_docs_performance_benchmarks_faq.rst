@@ -1,46 +1,50 @@
+..
+   _ Changes to this title must require changes to custom.css as styling will 
+   _ be lost (rst renders the title as an id that is used in a css selector #performance-information-frequently-asked-questions)
+
 Performance Information Frequently Asked Questions
 ==================================================
 
-The following questions (Q#) and answers (A) are related to published
+The following questions and answers are related to published
 `performance benchmarks <./performance_benchmarks.md>`__.
 
-Q1: How often do performance benchmarks get updated?
+How often do performance benchmarks get updated?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: New performance benchmarks are typically published on every
+New performance benchmarks are typically published on every
 ``major.minor`` release of the Intel® Distribution of OpenVINO™ toolkit.
 
-Q2: Where can I find the models used in the performance benchmarks?
+Where can I find the models used in the performance benchmarks?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: All models used are included in the GitHub repository of `Open
+All models used are included in the GitHub repository of `Open
 Model Zoo <https://github.com/openvinotoolkit/open_model_zoo>`__.
 
-Q3: Will there be any new models added to the list used for benchmarking?
+Will there be any new models added to the list used for benchmarking?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: The models used in the performance benchmarks were chosen based
+The models used in the performance benchmarks were chosen based
 on general adoption and usage in deployment scenarios. New models that
 support a diverse set of workloads and usage are added periodically.
 
-Q4: What does “CF” or “TF” in the graphs stand for?
+What does “CF” or “TF” in the graphs stand for?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: The “CF” means “Caffe”, and “TF” means “TensorFlow”.
+The “CF” means “Caffe”, and “TF” means “TensorFlow”.
 
-Q5: How can I run the benchmark results on my own?
+How can I run the benchmark results on my own?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: All of the performance benchmarks were generated using the
+All of the performance benchmarks were generated using the
 open-source tool within the Intel® Distribution of OpenVINO™ toolkit
 called ``benchmark_app``. This tool is available in both
 `C++ <../../samples/cpp/benchmark_app/README.md>`__ and
 `Python <../../tools/benchmark_tool/README.md>`__.
 
-Q6: What image sizes are used for the classification network models?
+What image sizes are used for the classification network models?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: The image size used in inference depends on the benchmarked
+The image size used in inference depends on the benchmarked
 network. The table below presents the list of input sizes for each
 network model:
 
@@ -181,10 +185,10 @@ network model:
      - object detection
      - 1200x1200
 
-Q7: Where can I purchase the specific hardware used in the benchmarking?
+Where can I purchase the specific hardware used in the benchmarking?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: Intel partners with vendors all over the world. For a list of
+Intel partners with vendors all over the world. For a list of
 Hardware Manufacturers, see the `Intel® AI: In Production Partners &
 Solutions
 Catalog <https://www.intel.com/content/www/us/en/internet-of-things/ai-in-production/partners-solutions-catalog.html>`__
@@ -194,20 +198,20 @@ documentation. Before purchasing any hardware, you can test and run
 models remotely, using `Intel® DevCloud for the
 Edge <http://devcloud.intel.com/edge/>`__.
 
-Q8: How can I optimize my models for better performance or accuracy?
+How can I optimize my models for better performance or accuracy?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: Set of guidelines and recommendations to optimize models are
+Set of guidelines and recommendations to optimize models are
 available in the `optimization
 guide <../optimization_guide/dldt_optimization_guide.md>`__. Join the
 conversation in the `Community
 Forum <https://software.intel.com/en-us/forums/intel-distribution-of-openvino-toolkit>`__
 for further support.
 
-Q9: Why are INT8 optimized models used for benchmarking on CPUs with no VNNI support?
+Why are INT8 optimized models used for benchmarking on CPUs with no VNNI support?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: The benefit of low-precision optimization using the OpenVINO™
+The benefit of low-precision optimization using the OpenVINO™
 toolkit model optimizer extends beyond processors supporting VNNI
 through Intel® DL Boost. The reduced bit width of INT8 compared to FP32
 allows Intel® CPU to process the data faster. Therefore, it offers
@@ -219,19 +223,19 @@ Core™ i7-8700T, and AVX-512 (VNNI) with Intel® Xeon® 5218T and Intel®
 Xeon® 8270, refer to the `Model Accuracy for INT8 and FP32
 Precision <performance_int8_vs_fp32.md>`__ article.
 
-Q10: Where can I search for OpenVINO™ performance results based on HW-platforms?
+Where can I search for OpenVINO™ performance results based on HW-platforms?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: The website format has changed in order to support more common
+The website format has changed in order to support more common
 approach of searching for the performance results of a given neural
 network model on different HW-platforms. As opposed to reviewing
 performance of a given HW-platform when working with different neural
 network models.
 
-Q11: How is Latency measured?
+How is Latency measured?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**A**: Latency is measured by running the OpenVINO™ Runtime in
+Latency is measured by running the OpenVINO™ Runtime in
 synchronous mode. In this mode, each frame or image is processed through
 the entire set of stages (pre-processing, inference, post-processing
 >`_
